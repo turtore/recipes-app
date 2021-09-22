@@ -21,6 +21,7 @@ function App() {
       <Route exact path="/perfil" component={ ProfilePage } />
       <Route exact path="/receitas-feitas" component={ MakeRecipesPage } />
       <Route exact path="/receitas-favoritas" component={ FavoritesRecipesPage } />
+
       {/* <Route exact path="/comidas/:id-da-receita" component={ DetailsMealRecipesPage } />
       <Route
         exact
