@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import RecipesContext from './RecipesContext';
+import theCockTailDBAPI from '../services/theCockTailDBAPI';
+import theMealDBAPI from '../services/theMealDBAPI';
 
 function RecipesProvider({ children }) {
-  const context = {};
+  const [mealOrDrink, setMealOrDrink] = useState('drink');
+  const context = {
+    theCockTailDBAPI,
+    theMealDBAPI,
+    mealOrDrink,
+  };
+  // o log abaixo é provisorio para futuro uso
+  console.log(setMealOrDrink);
   return (
     <RecipesContext.Provider value={ context }>
       {children}

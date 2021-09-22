@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, FloatingLabel, Container } from 'react-bootstrap';
 import './pages-css/LoginPage.css';
+import PropTypes from 'prop-types';
 
-const LoginPage = () => {
+const LoginPage = ({ history }) => {
   /* ------SETANDO ESTADOS--------- */
   const [inputsState, setInputsState] = useState({
     email: '',
@@ -18,13 +19,27 @@ const LoginPage = () => {
     });
   };
 
+  /* Assim que botão é clicado salva os Tokens e o user no localStorage. Após,
+   redireciona a página para a tela principal de comidas */
+  const handleClick = () => {
+    const user = {
+      email: inputsState.email,
+    };
+
+    localStorage.setItem('mealsToken', '1');
+    localStorage.setItem('cocktailsToken', '1');
+    localStorage.setItem('user', JSON.stringify(user));
+
+    history.push('/comidas');
+  };
+
   /* useEffect utilizado para que toda vez que o inputsState for alterado, seja verificado se o
     e-mail e password são validos ou não. Se forem validos, o botão é habilitado. */
   useEffect(() => {
     const emailVerification = /\S+@\S+\.\S+/;
     const isValidEmail = emailVerification.test(inputsState.email);
-    const MAX_LENGTH = 6;
-    const isValidPassword = inputsState.password.length > MAX_LENGTH;
+    const MIN_LENGTH = 6;
+    const isValidPassword = inputsState.password.length > MIN_LENGTH;
 
     if (isValidEmail && isValidPassword) {
       setBtnDisabledStatus(false);
@@ -67,6 +82,7 @@ const LoginPage = () => {
             type="button"
             size="lg"
             disabled={ btnDisabledStatus }
+            onClick={ handleClick }
             data-testid="login-submit-btn"
           >
             Entrar
@@ -75,6 +91,12 @@ const LoginPage = () => {
       </Form>
     </Container>
   );
+};
+
+LoginPage.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
 };
 
 export default LoginPage;
