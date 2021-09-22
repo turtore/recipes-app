@@ -9,6 +9,28 @@ function App() {
   return (
     <Switch>
       <Route exact path="/" component={ LoginPage } />
+      {/* <Route exact path="/comidas" component={ MealRecipesPage } />
+      <Route exact path="/bebibas" component={ CocktailRecipesPage } />
+      <Route exact path="/comidas/:id-da-receita" component={ DetailsMealRecipesPage } />
+      <Route
+        exact
+        path="/bebidas/:id-da-receita"
+        component={ DetailsCocktailRecipesPage }
+      />
+      <Route
+        exact
+        path="/comidas/:id-da-receita/in-progress"
+        component={ ProgressMealRecipePage }
+      />
+      <Route
+        exact
+        path="/bebidas/:id-da-receita/in-progress"
+        component={ ProgressCocktailRecipePage }
+      />
+      <Route exact path="/explorar" component={ ExplorePage } />
+      <Route exact path="/perfil" component={ ProfilePage } />
+      <Route exact path="/receitas-feitas" component={ MakeRecipesPage } />
+      <Route exact path="/receitas-favoritas" component={ FavoritesRecipesPage } /> */}
     </Switch>
   );
 }
