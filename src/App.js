@@ -4,12 +4,14 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Route, Switch } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
+import MealRecipesPage from './pages/MealRecipePage';
+import CocktailRecipesPage from './pages/CocktailRecipePage';
 
 function App() {
   return (
     <Switch>
       <Route exact path="/" component={ LoginPage } />
-      {/* <Route exact path="/comidas" component={ MealRecipesPage } />
+      <Route exact path="/comidas" component={ MealRecipesPage } />
       <Route exact path="/bebibas" component={ CocktailRecipesPage } />
       <Route exact path="/comidas/:id-da-receita" component={ DetailsMealRecipesPage } />
       <Route
@@ -30,7 +32,7 @@ function App() {
       <Route exact path="/explorar" component={ ExplorePage } />
       <Route exact path="/perfil" component={ ProfilePage } />
       <Route exact path="/receitas-feitas" component={ MakeRecipesPage } />
-      <Route exact path="/receitas-favoritas" component={ FavoritesRecipesPage } /> */}
+      <Route exact path="/receitas-favoritas" component={ FavoritesRecipesPage } />
     </Switch>
   );
 }
