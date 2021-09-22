@@ -1,10 +1,12 @@
 import React, { useContext } from 'react';
 import { Card } from 'react-bootstrap';
+import Header from '../components/Header';
 import RecipesContext from '../context/RecipesContext';
 
 const MealRecipePage = () => {
   const { recipes } = useContext(RecipesContext);
-  /** Simulando Cards */
+  const sizeListRecipes = 12;
+
   const cardsRecipes = (strMeal, indexValue, strMealThumb) => (
     <Card
       data-testid={ `${indexValue}-recipe-card` }
@@ -28,15 +30,22 @@ const MealRecipePage = () => {
   );
 
   return (
-    <div style={ { display: 'flex', flexWrap: 'wrap' } }>
-      {
-        recipes
-        .slice(0, 12)
-        .map((recipe, index) => (
-          cardsRecipes(recipe.strMeal, index, recipe.strMealThumb)
-        ))
-      }
-    </div>
+    <>
+      <div>
+        {/** É necessario passar props pageTitle com o valor
+         * de: "Comidas" para o header */}
+        <Header pageTitle="Comidas" />
+      </div>
+      <div style={ { display: 'flex', flexWrap: 'wrap' } }>
+        {
+          recipes
+            .slice(0, sizeListRecipes)
+            .map((recipe, index) => (
+              cardsRecipes(recipe.strMeal, index, recipe.strMealThumb)
+            ))
+        }
+      </div>
+    </>
   );
 };
 
