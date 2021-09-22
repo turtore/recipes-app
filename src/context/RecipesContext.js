@@ -1,4 +1,4 @@
-import { createContext } from 'react-dom';
+import { createContext } from 'react';
 
 const RecipesContext = createContext();
 
