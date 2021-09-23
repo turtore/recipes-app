@@ -33,7 +33,8 @@ function SearchBar() {
     changeSearchOrHeader } = useContext(RecipesContext);
 
   // função de alert
-  const alertWindow = (msg) => alert(msg);
+  // const alertWindow = (msg) => alert(msg);
+  const alertWindow = (msg) => console.log(msg);
 
   // serie de funções que serão utilizadas para as condições do resultado
   // feita funcao para verificar se é meal ou drink e utilizar os parametros corretos nas verificações
