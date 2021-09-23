@@ -11,5 +11,10 @@
 }
 
 .recomendation-container {
-  margin-bottom: 5rem;
+  margin-bottom: 3.8rem;
+  overflow-x: auto !important;
 }
+/* 
+.recipe-image {
+  height: 25rem;
+} */

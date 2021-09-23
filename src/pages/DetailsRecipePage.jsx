@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import { Container, Row, Col, Button, Image, Ratio } from 'react-bootstrap';
+import { Container, Row, Col, Button, Image, Ratio, Card, CardGroup } from 'react-bootstrap';
 import fetchDetailRecipe from '../services/detailRecipeEndPoint';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
@@ -8,14 +8,14 @@ import './pages-css/DetailsRecipePage.css';
 
 const DetailsRecipePage = () => {
   // tambem poderia desestruturar o match das props para pegar o recipeID --> { match: { params: { recipeId } } }
-  const { recipeId } = useParams();
-  const { pathname } = useLocation();
-  const [recipeDetails, setRecipeDetails] = useState({});
-  const [recipeType, setRecipeType] = useState('');
-  const [videoURL, setVideoURL] = useState('');
-  const isMeal = pathname.includes('comidas');
+  const { recipeId } = useParams(); // id que vem da URL
+  const { pathname } = useLocation(); // URL atual completa
+  const [recipeDetails, setRecipeDetails] = useState({}); // estado que recebe os detalhes da receita da requisição a API
+  const [recipeType, setRecipeType] = useState(''); // estado que armazenará o tipo de receia (comida ou bebida)
+  const [videoURL, setVideoURL] = useState(''); // estado que guarda a URL do vídeo se for uma receita de comida
+  const isMeal = pathname.includes('comidas'); // verifica se é comida ou bebida com base na URL
 
-  useEffect(() => {
+  useEffect(() => { // useEffect responsável por fazer a requisição da receita e guardar as informações no estado recipeDetails
     const getRecipeDetails = async () => {
       const myRecipeDetails = await fetchDetailRecipe(recipeId, isMeal);
 
@@ -59,6 +59,7 @@ const DetailsRecipePage = () => {
             src={ recipeDetails[`str${recipeType}Thumb`] }
             alt=""
             data-testid="recipe-photo"
+            className="recipe-image"
             fluid
           />
         </Col>
@@ -112,18 +113,74 @@ const DetailsRecipePage = () => {
           </Col>
         </Row>
       )}
-      <Row className="recomendation-container">
+      <Row>
         <Col>
           <h5>Recomendadas</h5>
-          <Row>
-            <Col data-testid="${index}-recomendation-card">
-              item 1 (se for comida, mostra bebida)
-            </Col>
-            <Col data-testid="${index}-recomendation-card">
-              Item 2 (se for comida, mostra bebida)
-            </Col>
-          </Row>
         </Col>
+      </Row>
+      <Row className="recomendation-container">
+        <CardGroup className="row flex-nowrap">
+          <Col>
+            <Card className="card-block" style={ { width: '9.7rem' } }>
+              <Card.Img variant="top" src="holder.js/100px160" />
+              <Card.Body>
+                <Card.Title>Card title</Card.Title>
+                <Card.Text>
+                  This is a wider card with supporting text below as a natural lead-in to
+                  additional content. This content is a little bit longer.
+                </Card.Text>
+              </Card.Body>
+              <Card.Footer>
+                <small className="text-muted">Last updated 3 mins ago</small>
+              </Card.Footer>
+            </Card>
+          </Col>
+          <Col>
+            <Card className="card-block" style={ { width: '9.7rem' } }>
+              <Card.Img variant="top" src="holder.js/100px160" />
+              <Card.Body>
+                <Card.Title>Card title</Card.Title>
+                <Card.Text>
+                  This is a wider card with supporting text below as a natural lead-in to
+                  additional content. This content is a little bit longer.
+                </Card.Text>
+              </Card.Body>
+              <Card.Footer>
+                <small className="text-muted">Last updated 3 mins ago</small>
+              </Card.Footer>
+            </Card>
+          </Col>
+          <Col>
+            <Card className="card-block" style={ { width: '9.7rem' } }>
+              <Card.Img variant="top" src="holder.js/100px160" />
+              <Card.Body>
+                <Card.Title>Card title</Card.Title>
+                <Card.Text>
+                  This is a wider card with supporting text below as a natural lead-in to
+                  additional content. This content is a little bit longer.
+                </Card.Text>
+              </Card.Body>
+              <Card.Footer>
+                <small className="text-muted">Last updated 3 mins ago</small>
+              </Card.Footer>
+            </Card>
+          </Col>
+          <Col>
+            <Card className="card-block" style={ { width: '9.7rem' } }>
+              <Card.Img variant="top" src="holder.js/100px160" />
+              <Card.Body>
+                <Card.Title>Card title</Card.Title>
+                <Card.Text>
+                  This is a wider card with supporting text below as a natural lead-in to
+                  additional content. This content is a little bit longer.
+                </Card.Text>
+              </Card.Body>
+              <Card.Footer>
+                <small className="text-muted">Last updated 3 mins ago</small>
+              </Card.Footer>
+            </Card>
+          </Col>
+        </CardGroup>
       </Row>
       <Row className="fixed-bottom">
         <Col className="column-container">
