@@ -27,6 +27,18 @@ export default async function recipeAPI(caseInput, inputValue, mealOrDrink) {
     const firstLetter = await requestFirstLetter.json();
     return firstLetter;
   }
+  /** Pesquisa receita por categoria */
+  case 'category': {
+    const requestCategorys = await fetch(`${apiUrl}filter.php?c=${inputValue}`);
+    const responseCategorys = await requestCategorys.json();
+    return responseCategorys;
+  }
+  /** Pesquisa as categorias */
+  case 'listCategorys': {
+    const requestCategorys = await fetch(`${apiUrl}list.php?c=list`);
+    const responseCategorys = await requestCategorys.json();
+    return responseCategorys;
+  }
   default:
     return 'parametro, invalido';
   }

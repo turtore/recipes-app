@@ -5,31 +5,40 @@ import SearchBar from '../components/Searchbar';
 import RecipesContext from '../context/RecipesContext';
 import Footer from '../components/Footer';
 import RecipesCards from '../components/RecipesCards';
+import recipeAPI from '../services/recipeAPI';
 
 const CocktailRecipePage = () => {
-  const { searchOrHeader,
-    setMealOrDrink,
-    listRecipes,
-    categorys,
+  const {
     recipes,
+    categorys,
+    searchOrHeader,
+    setRecipes,
+    setCategorys,
   } = useContext(RecipesContext);
   const sizeListRecipes = 12;
   const sizeListCategorys = 5;
-  const getContext = useContext(RecipesContext);
 
-  // quando carrega a pagina de cocktail, coloca o estado no provider como drink
   useEffect(() => {
-    setMealOrDrink('drink');
-  });
+    requestAPI();
+  }, []);
 
-  /** Evento de enviar a categoria pro provider */
-  const handleFilterCategory = (strCategory) => {
-    getContext.filterRecipes(strCategory);
+  /** Faz as requisições para mostrar as categorias e as receitas */
+  const requestAPI = async () => {
+    const dataCockTails = await recipeAPI('name', '', 'drink');
+    const dataCategorys = await recipeAPI('listCategorys', '', 'drink');
+    setRecipes(dataCockTails.drinks);
+    setCategorys(dataCategorys.drinks);
+  }
+
+  /** Função que envia a categoria pro provider */
+  const handleFilterCategory = async (strCategory) => {
+    const dataFilterCockTails = await recipeAPI('category', strCategory, 'drink');
+    setRecipes(dataFilterCockTails.drinks);
   };
 
   /** Função que mostra todas as receitas */
-  const handleClickFilterAll = () => {
-    listRecipes();
+  const handleClickFilterAll = async () => {
+    await requestAPI();
   };
 
   return (
