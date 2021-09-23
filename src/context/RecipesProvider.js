@@ -2,8 +2,11 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLocation } from 'react-router-dom';
 import RecipesContext from './RecipesContext';
-import { getMeal, getCategoryMeal } from '../services/theMealDB_API';
-import { getCockTail, getCategoryCockTail } from '../services/theCockTailDB_API';
+import { getMeal, getCategoryMeal, getFilterMeal } from '../services/theMealDB_API';
+import { getCockTail,
+  getCategoryCockTail,
+  getFilterCockTail,
+} from '../services/theCockTailDB_API';
 
 function RecipesProvider({ children }) {
   const { pathname } = useLocation();
@@ -59,8 +62,29 @@ function RecipesProvider({ children }) {
     listCategorys();
   }, [pathname]);
 
+  /**
+   * Requisição que faz o filtro
+   * e faz o setRecipes
+   */
+  const filterRecipes = async (categorValue) => {
+    switch (pathname) {
+    case '/comidas': {
+      const resultsFilterMeal = await getFilterMeal(categorValue);
+      setRecipes(resultsFilterMeal.meals);
+      break;
+    }
+    case '/bebidas': {
+      const resultsFilterCockTail = await getFilterCockTail(categorValue);
+      setRecipes(resultsFilterCockTail.drinks);
+      break;
+    }
+    default:
+      break;
+    }
+  };
+
   return (
-    <RecipesContext.Provider value={ { recipes, categorys } }>
+    <RecipesContext.Provider value={ { recipes, categorys, filterRecipes } }>
       {children}
     </RecipesContext.Provider>
   );

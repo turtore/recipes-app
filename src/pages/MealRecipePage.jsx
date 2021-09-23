@@ -5,8 +5,13 @@ import RecipesContext from '../context/RecipesContext';
 
 const MealRecipePage = () => {
   const { recipes, categorys } = useContext(RecipesContext);
+  const getContext = useContext(RecipesContext);
   const sizeListRecipes = 12;
   const sizeListCategorys = 5;
+
+  const handleFilterCategory = (strCategory) => {
+    getContext.filterRecipes(strCategory);
+  };
 
   return (
     <>
@@ -26,6 +31,7 @@ const MealRecipePage = () => {
                 data-testid={ `${category.strCategory}-category-filter` }
                 key={ index }
                 type="button"
+                onClick={ () => handleFilterCategory(category.strCategory) }
               >
                 { category.strCategory }
               </button>
