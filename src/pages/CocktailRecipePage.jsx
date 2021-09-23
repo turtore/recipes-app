@@ -1,28 +1,46 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
-import RecipesCards from '../components/RecipesCards';
+import SearchBar from '../components/Searchbar';
 import RecipesContext from '../context/RecipesContext';
 import Footer from '../components/Footer';
+import RecipesCards from '../components/RecipesCards';
 
 const CocktailRecipePage = () => {
-  const { recipes, categorys, listRecipes } = useContext(RecipesContext);
-  const getContext = useContext(RecipesContext);
+  const { searchOrHeader,
+    setMealOrDrink,
+    listRecipes,
+    categorys,
+    recipes,
+  } = useContext(RecipesContext);
   const sizeListRecipes = 12;
   const sizeListCategorys = 5;
+  const getContext = useContext(RecipesContext);
+
+  // quando carrega a pagina de cocktail, coloca o estado no provider como drink
+  useEffect(() => {
+    setMealOrDrink('drink');
+  });
 
   /** Evento de enviar a categoria pro provider */
   const handleFilterCategory = (strCategory) => {
     getContext.filterRecipes(strCategory);
   };
 
-  /** Evento que mostra todas as receitas */
-  const handleCliclFilterAll = () => {
+  /** Função que mostra todas as receitas */
+  const handleClickFilterAll = () => {
     listRecipes();
   };
 
   return (
     <>
+      <div>
+        {!searchOrHeader ? <Header pageTitle="Comidas" showSearch={ false } />
+          : <SearchBar /> }
+        {/** É necessario passar props pageTitle com o valor
+     * de: "Comidas" para o header */}
+        {/* <Header pageTitle="Comidas" /> */}
+      </div>
       <div>
         {/** É necessario passar props pageTitle com o valor
          * de: Bebidas para ser mostrado no header */}
@@ -34,7 +52,7 @@ const CocktailRecipePage = () => {
         <button
           data-testid="All-category-filter"
           type="button"
-          onClick={ handleCliclFilterAll }
+          onClick={ handleClickFilterAll }
         >
           All
         </button>
