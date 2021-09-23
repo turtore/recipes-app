@@ -13,7 +13,7 @@ const CocktailRecipePage = () => {
 
   return (
     <div>
-      {!searchOrHeader ? <Header pageTitle="Explorar" showSearch={ false } />
+      {!searchOrHeader ? <Header pageTitle="Comidas" showSearch={ false } />
         : <SearchBar /> }
       {/** É necessario passar props pageTitle com o valor
      * de: "Comidas" para o header */}
