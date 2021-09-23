@@ -7,6 +7,7 @@ export default async function theCockTailDBAPI(caseInput, inputValue) {
   }
   case 'name': {
     const requestName = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${inputValue}`);
+
     const nameFind = await requestName.json();
     return nameFind;
   }
