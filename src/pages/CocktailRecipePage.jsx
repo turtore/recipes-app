@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import RecipesCards from '../components/RecipesCards';
 import RecipesContext from '../context/RecipesContext';
@@ -58,12 +59,14 @@ const CocktailRecipePage = () => {
           recipes
             .slice(0, sizeListRecipes)
             .map((recipe, index) => (
-              <RecipesCards
-                key={ index }
-                nameValue={ recipe.strDrink }
-                indexValue={ index }
-                thumbValue={ recipe.strDrinkThumb }
-              />
+              <Link to={ `/bebidas/${recipe.idDrink}` }>
+                <RecipesCards
+                  key={ index }
+                  nameValue={ recipe.strDrink }
+                  indexValue={ index }
+                  thumbValue={ recipe.strDrinkThumb }
+                />
+              </Link>
             ))
         }
       </div>
