@@ -59,9 +59,8 @@ const CocktailRecipePage = () => {
           recipes
             .slice(0, sizeListRecipes)
             .map((recipe, index) => (
-              <Link to={ `/bebidas/${recipe.idDrink}` }>
+              <Link key={ index } to={ `/bebidas/${recipe.idDrink}` }>
                 <RecipesCards
-                  key={ index }
                   nameValue={ recipe.strDrink }
                   indexValue={ index }
                   thumbValue={ recipe.strDrinkThumb }

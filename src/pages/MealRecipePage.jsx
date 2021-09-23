@@ -59,9 +59,8 @@ const MealRecipePage = () => {
           recipes
             .slice(0, sizeListRecipes)
             .map((recipe, index) => (
-              <Link to={ `/comidas/${recipe.idMeal}` }>
+              <Link key={ index } to={ `/comidas/${recipe.idMeal}` }>
                 <RecipesCards
-                  key={ index }
                   nameValue={ recipe.strMeal }
                   indexValue={ index }
                   thumbValue={ recipe.strMealThumb }
