@@ -18,17 +18,13 @@ const MealRecipePage = () => {
   const sizeListRecipes = 12;
   const sizeListCategorys = 5;
 
-  useEffect(() => {
-    requestAPI();
-  }, []);
-
   /** Faz as requisições para mostrar as categorias e as receitas */
   const requestAPI = async () => {
     const dataMeal = await recipeAPI('name', '', 'meal');
     const dataCategorys = await recipeAPI('listCategorys', '', 'meal');
     setRecipes(dataMeal.meals);
     setCategorys(dataCategorys.meals);
-  }
+  };
 
   /** Função que envia a categoria pro provider */
   const handleFilterCategory = async (strCategory) => {
@@ -40,6 +36,10 @@ const MealRecipePage = () => {
   const handleClickFilterAll = async () => {
     await requestAPI();
   };
+
+  useEffect(() => {
+    requestAPI();
+  }, []);
 
   return (
     <>

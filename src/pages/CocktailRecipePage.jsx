@@ -14,13 +14,10 @@ const CocktailRecipePage = () => {
     searchOrHeader,
     setRecipes,
     setCategorys,
+    setMealOrDrink,
   } = useContext(RecipesContext);
   const sizeListRecipes = 12;
   const sizeListCategorys = 5;
-
-  useEffect(() => {
-    requestAPI();
-  }, []);
 
   /** Faz as requisições para mostrar as categorias e as receitas */
   const requestAPI = async () => {
@@ -28,7 +25,7 @@ const CocktailRecipePage = () => {
     const dataCategorys = await recipeAPI('listCategorys', '', 'drink');
     setRecipes(dataCockTails.drinks);
     setCategorys(dataCategorys.drinks);
-  }
+  };
 
   /** Função que envia a categoria pro provider */
   const handleFilterCategory = async (strCategory) => {
@@ -40,6 +37,11 @@ const CocktailRecipePage = () => {
   const handleClickFilterAll = async () => {
     await requestAPI();
   };
+
+  useEffect(() => {
+    requestAPI();
+    setMealOrDrink('drink');
+  }, []);
 
   return (
     <>
