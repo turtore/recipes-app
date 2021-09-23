@@ -79,7 +79,7 @@ function RecipesProvider({ children }) {
   useEffect(() => {
     listRecipes();
     listCategorys();
-  }, []);
+  }, [pathname]);
 
   return (
     <RecipesContext.Provider value={ { recipes, categorys, filterRecipes, listRecipes } }>
