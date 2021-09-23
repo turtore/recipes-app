@@ -1,71 +1,97 @@
 // import { useHistory } from "react-router-dom";
 import React, { useContext, useState } from 'react';
+// import { Redirect } from 'react-router-dom';
 import RecipesContext from '../context/RecipesContext';
+import RecipeCard from './RecipeCard';
 
 // Criado os services api separados para comida e bebida
 // os inputs do tipo radio possuem o mesmo name="name-search" para ser apenas um selecionado por vez.
 // a searchbar tem um estado local que é utilizado para passar paramentros a chamada da API
 // criado estado global no provider para definir se é bebida ou comida
-// poode criar alert com undefined para verificar true ou false na response da api
 const STARTER_OPTION = '';
 const STARTER_INPUT = '';
-// const MAX_LENGTH = 20;
+// criado seletor para função de renderizar os cards
+const CARD_SELECTOR = {
+  meal: {
+    index: 'idMeal',
+    name: 'strMeal',
+    img: 'strMealThumb,',
+  },
+  drink: {
+    index: 'idDrink',
+    name: 'strDrink',
+    img: 'strDrinkThumb',
+  },
+};
 
 function SearchBar() {
   const [inputValue, setInputValue] = useState(STARTER_INPUT);
   const [searchOption, setOption] = useState(STARTER_OPTION);
-  // const [maxLength, setMaxLength] = useState(MAX_LENGTH);
-  const { theCockTailDBAPI,
-    theMealDBAPI,
+  const { recipeAPI,
     mealOrDrink,
     searchOrHeader,
     changeSearchOrHeader } = useContext(RecipesContext);
 
+  // função de alert
   const alertWindow = (msg) => alert(msg);
 
+  // serie de funções que serão utilizadas para as condições do resultado
+  // feita funcao para verificar se é meal ou drink e utilizar os parametros corretos nas verificações
+  const checkTypeOfRecipe = (actualType) => {
+    if (actualType === 'meal') {
+      return 'meals';
+    }
+    if (actualType === 'drink') {
+      return 'drinks';
+    }
+  };
+  // função para renderizar os cards
+  const renderCards = (recipesFound) => {
+    const { index } = CARD_SELECTOR[mealOrDrink];
+    const { name } = CARD_SELECTOR[mealOrDrink];
+    const { img } = CARD_SELECTOR[mealOrDrink];
+    const recipes = recipesFound[`${mealOrDrink}s`];
+    // console.log(recipes[0][img]);
+    return (
+      <div>
+        { recipes.map((recipe) => (<RecipeCard
+          key={ recipe[index] }
+          name={ recipe[name] }
+          img={ recipe[img] }
+          index={ recipe[index] }
+        />)) }
+      </div>
+    );
+  };
   async function onClickButton() {
+    // chamada a função acima e guardado resultado na variavel que será utilizada para verificar as condições de redirecionamento
+    const typeOfRecipe = checkTypeOfRecipe(mealOrDrink);
+
     changeSearchOrHeader(!searchOrHeader);
     if (searchOption === 'first-letter' && inputValue.length > 1) {
       alertWindow('Sua busca deve conter somente 1 (um) caracter');
     }
-    if (mealOrDrink === 'meal') {
-      const mealResponse = await theMealDBAPI(searchOption, inputValue);
-      console.log(mealResponse);
-      if (mealResponse.meals === null) {
-        alertWindow('Sinto muito, não encontramos nenhuma receita para esses filtros.');
-      } else if (mealResponse.meals.length === 1) {
-        const { idMeal } = mealResponse;
-        console.log('só tem um');
-        // history.push(`/comidas/${idMeal}`);
-        // mealResponse.meals.idMeal
-      }
-      // console.log(mealResponse);
-    }
 
-    if (mealOrDrink === 'drink') {
-      const drinkResponse = await theCockTailDBAPI(searchOption, inputValue);
-      // console.log(drinkResponse.drinks.length);
-      console.log(drinkResponse);
-      if (drinkResponse.drinks === null) {
-        // setNoRecipe(true);
-        alertWindow('Sinto muito, não encontramos nenhuma receita para esses filtros.');
-      } else if (drinkResponse.drinks.length === 1) {
-        console.log('só tem 1');
+    const apiResponse = await recipeAPI(searchOption, inputValue, mealOrDrink);
+    // console.log(apiResponse);
+    // verifica se nao encontrou nenhum resultado para mandar alert na cara do usuário || o else if verifica se tem apenas 1 resultado para redirecionar
+    if (apiResponse[typeOfRecipe] === null) {
+      alertWindow('Sinto muito, não encontramos nenhuma receita para esses filtros.');
+    } else if (apiResponse[typeOfRecipe].length === 1) {
+      if (mealOrDrink === 'drink') {
+        // <Redirect to={`${apiResponse}/bebidas/:${apiResponse[typeOfRecipe].idDrink}`} />
+      } else {
+        // <Redirect to={`${apiResponse}/bebidas/:${apiResponse[typeOfRecipe].idMeal}`} />
+
       }
-      // if (drinkResponse.drinks.length===0){
-      //   window.alert('nada encontrado')
-      // }
+      // const { idMeal } = mealResponse;
+      // console.log('só tem um');
+      // abaixo se tem mais de 1 receita vai renderizar os cards
+    } else if (apiResponse[typeOfRecipe].length > 1) {
+      // criei componente RecipeCard para renderizar
+      renderCards(apiResponse);
     }
   }
-  // function checkIfFirstLetter(e) {
-  //   setInputValue(STARTER_INPUT);
-  //   console.log(searchOption);
-  //   if (e.target.value === 'first-letter') {
-  //     setMaxLength(1);
-  //   } else {
-  //     setMaxLength(MAX_LENGTH);
-  //   }
-  // }
 
   return (
     <div>
