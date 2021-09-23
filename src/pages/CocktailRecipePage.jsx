@@ -35,8 +35,8 @@ const CocktailRecipePage = () => {
   return (
     <>
       <div>
-        {!searchOrHeader ? <Header pageTitle="Comidas" showSearch={ false } />
-          : <SearchBar /> }
+        <Header pageTitle="Bebidas" />
+        {searchOrHeader ? <SearchBar /> : '' }
         {/** É necessario passar props pageTitle com o valor
      * de: "Comidas" para o header */}
         {/* <Header pageTitle="Comidas" /> */}
@@ -44,7 +44,6 @@ const CocktailRecipePage = () => {
       <div>
         {/** É necessario passar props pageTitle com o valor
          * de: Bebidas para ser mostrado no header */}
-        <Header pageTitle="Bebidas" />
       </div>
 
       {/** Mostra 5 botões com as primeiras cateforias da requisição */}

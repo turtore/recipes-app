@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Header from '../components/Header';
+import SearchBar from '../components/Searchbar';
+import RecipesContext from '../context/RecipesContext';
 
-const MakeRecipesPage = () => (
-  <div>
-    {/** É necessario passar props pageTitle com o valor
-    de: "Receitas Feitas" e showSearch = { false } para o header */}
-    <Header pageTitle="Receitas Feitas" showSearch={ false } />
-  </div>
-);
-
+const MakeRecipesPage = () => {
+  const { searchOrHeader } = useContext(RecipesContext);
+  return (
+    <div>
+      <Header pageTitle="Receitas Feitas" showSearch={ false } />
+      {searchOrHeader ? <SearchBar /> : '' }
+    </div>
+  );
+};
 export default MakeRecipesPage;
