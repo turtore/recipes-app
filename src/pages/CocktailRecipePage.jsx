@@ -4,13 +4,19 @@ import RecipesCards from '../components/RecipesCards';
 import RecipesContext from '../context/RecipesContext';
 
 const CocktailRecipePage = () => {
-  const { recipes, categorys } = useContext(RecipesContext);
+  const { recipes, categorys, listRecipes } = useContext(RecipesContext);
   const getContext = useContext(RecipesContext);
   const sizeListRecipes = 12;
   const sizeListCategorys = 5;
 
+  /** Evento de enviar a categoria pro provider */
   const handleFilterCategory = (strCategory) => {
     getContext.filterRecipes(strCategory);
+  };
+
+  /** Evento que mostra todas as receitas */
+  const handleCliclFilterAll = () => {
+    listRecipes();
   };
 
   return (
@@ -23,6 +29,13 @@ const CocktailRecipePage = () => {
 
       {/** Mostra 5 botões com as primeiras cateforias da requisição */}
       <div>
+        <button
+          data-testid="All-category-filter"
+          type="button"
+          onClick={ handleCliclFilterAll }
+        >
+          All
+        </button>
         {
           categorys
             .slice(0, sizeListCategorys)

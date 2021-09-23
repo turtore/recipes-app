@@ -16,65 +16,58 @@ function RecipesProvider({ children }) {
 
   /**
    * Verifica se esta na página de comida ou bebida
-   * e faz o setRecipes
+   * e seta as receitas no state
    */
-  useEffect(() => {
-    async function listRecipes() {
-      switch (pathname) {
-      case '/comidas': {
-        const resultsMeal = await getMeal();
-        setRecipes(resultsMeal.meals);
-        break;
-      }
-      case '/bebidas': {
-        const resultsCockTail = await getCockTail();
-        setRecipes(resultsCockTail.drinks);
-        break;
-      }
-      default:
-        break;
-      }
+  const listRecipes = async () => {
+    switch (pathname) {
+    case '/comidas': {
+      const resultsMeal = await getMeal();
+      setRecipes(resultsMeal.meals);
+      break;
     }
-    listRecipes();
-  }, [pathname]);
+    case '/bebidas': {
+      const resultsCockTail = await getCockTail();
+      setRecipes(resultsCockTail.drinks);
+      break;
+    }
+    default:
+      break;
+    }
+  };
 
   /**
    * Verifica se esta na página de comida ou bebida
-   * e faz o setCategory
+   * e seta as categorias no state
    */
-  useEffect(() => {
-    async function listCategorys() {
-      switch (pathname) {
-      case '/comidas': {
-        const resultsMeal = await getCategoryMeal();
-        setCategorys(resultsMeal.meals);
-        break;
-      }
-      case '/bebidas': {
-        const resultsCockTail = await getCategoryCockTail();
-        setCategorys(resultsCockTail.drinks);
-        break;
-      }
-      default:
-        break;
-      }
-    }
-    listCategorys();
-  }, [pathname]);
-
-  /**
-   * Requisição que faz o filtro
-   * e faz o setRecipes
-   */
-  const filterRecipes = async (categorValue) => {
+  const listCategorys = async () => {
     switch (pathname) {
     case '/comidas': {
-      const resultsFilterMeal = await getFilterMeal(categorValue);
+      const resultsMeal = await getCategoryMeal();
+      setCategorys(resultsMeal.meals);
+      break;
+    }
+    case '/bebidas': {
+      const resultsCockTail = await getCategoryCockTail();
+      setCategorys(resultsCockTail.drinks);
+      break;
+    }
+    default:
+      break;
+    }
+  };
+
+  /**
+   * Faz uma requisição com o valor da categoria que foi filtrada
+   */
+  const filterRecipes = async (categoryValue) => {
+    switch (pathname) {
+    case '/comidas': {
+      const resultsFilterMeal = await getFilterMeal(categoryValue);
       setRecipes(resultsFilterMeal.meals);
       break;
     }
     case '/bebidas': {
-      const resultsFilterCockTail = await getFilterCockTail(categorValue);
+      const resultsFilterCockTail = await getFilterCockTail(categoryValue);
       setRecipes(resultsFilterCockTail.drinks);
       break;
     }
@@ -83,8 +76,13 @@ function RecipesProvider({ children }) {
     }
   };
 
+  useEffect(() => {
+    listRecipes();
+    listCategorys();
+  }, []);
+
   return (
-    <RecipesContext.Provider value={ { recipes, categorys, filterRecipes } }>
+    <RecipesContext.Provider value={ { recipes, categorys, filterRecipes, listRecipes } }>
       {children}
     </RecipesContext.Provider>
   );
