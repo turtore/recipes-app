@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import RecipesContext from '../context/RecipesContext';
 import Header from '../components/Header';
 import RecipesCards from '../components/RecipesCards';
+import Footer from '../components/Footer';
 import SearchBar from '../components/Searchbar';
 
 const MealRecipePage = () => {
@@ -83,6 +84,7 @@ const MealRecipePage = () => {
             ))
         }
       </div>
+      <Footer />
     </>
   );
 };
