@@ -1,9 +1,11 @@
 #footer-container {
+  background-color: white;
   bottom: 0px;
   display: flex;
   flex-direction: row;
-  height: 50px;
+  height: 60px;
   justify-content: space-around;
+  padding-top: 10px;
   position: fixed;
   width: 100%;
 }
