@@ -2,10 +2,10 @@ import React from 'react';
 import drinkIcon from '../images/drinkIcon.svg';
 import exploreIcon from '../images/exploreIcon.svg';
 import mealIcon from '../images/mealIcon.svg';
-import './components-css/footer.css';
+import './styles/footer.css';
 
 const Footer = () => (
-  <div id="footer-container" data-testid="footer">
+  <div className="footer-container" data-testid="footer">
     <a href="/bebidas">
       <img src={ drinkIcon } alt="bebidas" data-testid="drinks-bottom-btn" />
     </a>

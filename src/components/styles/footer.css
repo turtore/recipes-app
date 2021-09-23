@@ -1,6 +1,6 @@
-#footer-container {
+.footer-container {
   background-color: white;
-  bottom: 0px;
+  bottom: 0;
   display: flex;
   flex-direction: row;
   height: 60px;
