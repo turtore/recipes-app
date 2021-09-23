@@ -1,33 +1,12 @@
 import React, { useContext } from 'react';
-import { Card } from 'react-bootstrap';
 import Header from '../components/Header';
+import RecipesCards from '../components/RecipesCards';
 import RecipesContext from '../context/RecipesContext';
 
 const CocktailRecipePage = () => {
-  const { recipes } = useContext(RecipesContext);
+  const { recipes, categorys } = useContext(RecipesContext);
   const sizeListRecipes = 12;
-
-  const cardsRecipes = (strDrink, indexValue, strDrinkThumb) => (
-    <Card
-      data-testid={ `${indexValue}-recipe-card` }
-      key={ indexValue }
-      style={ { width: '18rem' } }
-    >
-      <Card.Body>
-        <Card.Img
-          data-testid={ `${indexValue}-card-img` }
-          variant="top"
-          src={ strDrinkThumb }
-        />
-        <Card.Title
-          data-testid={ `${indexValue}-card-name` }
-          style={ { marginTop: '10px' } }
-        >
-          { strDrink }
-        </Card.Title>
-      </Card.Body>
-    </Card>
-  );
+  const sizeListCategorys = 5;
 
   return (
     <>
@@ -36,12 +15,36 @@ const CocktailRecipePage = () => {
          * de: Bebidas para ser mostrado no header */}
         <Header pageTitle="Bebidas" />
       </div>
+
+      {/** Mostra 5 botões com as primeiras cateforias da requisição */}
+      <div>
+        {
+          categorys
+            .slice(0, sizeListCategorys)
+            .map((category, index) => (
+              <button
+                data-testid={ `${category.strCategory}-category-filter` }
+                key={ index }
+                type="button"
+              >
+                { category.strCategory }
+              </button>
+            ))
+        }
+      </div>
+
+      {/** Renderiza as Cardas com as Comidas */}
       <div style={ { display: 'flex', flexWrap: 'wrap' } }>
         {
           recipes
             .slice(0, sizeListRecipes)
             .map((recipe, index) => (
-              cardsRecipes(recipe.strDrink, index, recipe.strDrinkThumb)
+              <RecipesCards
+                key={ index }
+                nameValue={ recipe.strDrink }
+                indexValue={ index }
+                thumbValue={ recipe.strDrinkThumb }
+              />
             ))
         }
       </div>

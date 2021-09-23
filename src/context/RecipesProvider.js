@@ -2,14 +2,19 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLocation } from 'react-router-dom';
 import RecipesContext from './RecipesContext';
-import getMeal from '../services/theMealDB_API';
-import getCockTail from '../services/theCockTailDB_API';
+import { getMeal, getCategoryMeal } from '../services/theMealDB_API';
+import { getCockTail, getCategoryCockTail } from '../services/theCockTailDB_API';
 
 function RecipesProvider({ children }) {
   const { pathname } = useLocation();
   const [recipes, setRecipes] = useState([]);
+  const [categorys, setCategorys] = useState([]);
   // const context = {};
 
+  /**
+   * Verifica se esta na página de comida ou bebida
+   * e faz o setRecipes
+   */
   useEffect(() => {
     async function listRecipes() {
       switch (pathname) {
@@ -30,8 +35,32 @@ function RecipesProvider({ children }) {
     listRecipes();
   }, [pathname]);
 
+  /**
+   * Verifica se esta na página de comida ou bebida
+   * e faz o setCategory
+   */
+  useEffect(() => {
+    async function listCategorys() {
+      switch (pathname) {
+      case '/comidas': {
+        const resultsMeal = await getCategoryMeal();
+        setCategorys(resultsMeal.meals);
+        break;
+      }
+      case '/bebidas': {
+        const resultsCockTail = await getCategoryCockTail();
+        setCategorys(resultsCockTail.drinks);
+        break;
+      }
+      default:
+        break;
+      }
+    }
+    listCategorys();
+  }, [pathname]);
+
   return (
-    <RecipesContext.Provider value={ { recipes } }>
+    <RecipesContext.Provider value={ { recipes, categorys } }>
       {children}
     </RecipesContext.Provider>
   );
