@@ -1,8 +1,8 @@
-// import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 import React, { useContext, useState } from 'react';
 // import { Redirect } from 'react-router-dom';
 import RecipesContext from '../context/RecipesContext';
-import RecipeCard from './RecipeCard';
+// import RecipeCard from './RecipeCard';
 
 // Criado os services api separados para comida e bebida
 // os inputs do tipo radio possuem o mesmo name="name-search" para ser apenas um selecionado por vez.
@@ -11,30 +11,19 @@ import RecipeCard from './RecipeCard';
 const STARTER_OPTION = '';
 const STARTER_INPUT = '';
 // criado seletor para função de renderizar os cards
-const CARD_SELECTOR = {
-  meal: {
-    index: 'idMeal',
-    name: 'strMeal',
-    img: 'strMealThumb,',
-  },
-  drink: {
-    index: 'idDrink',
-    name: 'strDrink',
-    img: 'strDrinkThumb',
-  },
-};
 
 function SearchBar() {
+  const history = useHistory();
   const [inputValue, setInputValue] = useState(STARTER_INPUT);
   const [searchOption, setOption] = useState(STARTER_OPTION);
   const { recipeAPI,
     mealOrDrink,
     searchOrHeader,
-    changeSearchOrHeader } = useContext(RecipesContext);
+    changeSearchOrHeader,
+    setRecipes } = useContext(RecipesContext);
 
   // função de alert
-  // const alertWindow = (msg) => alert(msg);
-  const alertWindow = (msg) => console.log(msg);
+  const alertWindow = (msg) => alert(msg);
 
   // serie de funções que serão utilizadas para as condições do resultado
   // feita funcao para verificar se é meal ou drink e utilizar os parametros corretos nas verificações
@@ -47,23 +36,7 @@ function SearchBar() {
     }
   };
   // função para renderizar os cards
-  const renderCards = (recipesFound) => {
-    const { index } = CARD_SELECTOR[mealOrDrink];
-    const { name } = CARD_SELECTOR[mealOrDrink];
-    const { img } = CARD_SELECTOR[mealOrDrink];
-    const recipes = recipesFound[`${mealOrDrink}s`];
-    // console.log(recipes[0][img]);
-    return (
-      <div>
-        { recipes.map((recipe) => (<RecipeCard
-          key={ recipe[index] }
-          name={ recipe[name] }
-          img={ recipe[img] }
-          index={ recipe[index] }
-        />)) }
-      </div>
-    );
-  };
+
   async function onClickButton() {
     // chamada a função acima e guardado resultado na variavel que será utilizada para verificar as condições de redirecionamento
     const typeOfRecipe = checkTypeOfRecipe(mealOrDrink);
@@ -80,17 +53,15 @@ function SearchBar() {
       alertWindow('Sinto muito, não encontramos nenhuma receita para esses filtros.');
     } else if (apiResponse[typeOfRecipe].length === 1) {
       if (mealOrDrink === 'drink') {
-        // <Redirect to={`${apiResponse}/bebidas/:${apiResponse[typeOfRecipe].idDrink}`} />
+        console.log(apiResponse[typeOfRecipe][0].idDrink);
+        history.push(`/bebidas/${apiResponse[typeOfRecipe][0].idDrink}`);
       } else {
-        // <Redirect to={`${apiResponse}/bebidas/:${apiResponse[typeOfRecipe].idMeal}`} />
-
+        history.push(`/comidas/${apiResponse[typeOfRecipe][0].idMeal}`);
       }
-      // const { idMeal } = mealResponse;
-      // console.log('só tem um');
       // abaixo se tem mais de 1 receita vai renderizar os cards
     } else if (apiResponse[typeOfRecipe].length > 1) {
-      // criei componente RecipeCard para renderizar
-      renderCards(apiResponse);
+      // utiliza função setRecipes para renderizar os cards
+      setRecipes(apiResponse[typeOfRecipe]);
     }
   }
 
