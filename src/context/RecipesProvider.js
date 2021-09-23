@@ -107,6 +107,7 @@ function RecipesProvider({ children }) {
     recipes,
     categorys,
     listRecipes,
+    setRecipes,
   };
 
   // o log abaixo é provisorio para futuro uso
