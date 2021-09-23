@@ -17,7 +17,7 @@ const MealRecipePage = () => {
   };
 
   /** Função que mostra todas as receitas */
-  const handleCliclFilterAll = () => {
+  const handleClickFilterAll = () => {
     listRecipes();
   };
 
@@ -34,7 +34,7 @@ const MealRecipePage = () => {
         <button
           data-testid="All-category-filter"
           type="button"
-          onClick={ handleCliclFilterAll }
+          onClick={ handleClickFilterAll }
         >
           All
         </button>
