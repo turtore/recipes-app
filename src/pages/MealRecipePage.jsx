@@ -1,12 +1,13 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
+import SearchBar from '../components/Searchbar';
 import RecipesCards from '../components/RecipesCards';
 import RecipesContext from '../context/RecipesContext';
 import Footer from '../components/Footer';
 
 const MealRecipePage = () => {
-  const { recipes, categorys, listRecipes } = useContext(RecipesContext);
+  const { recipes, categorys, listRecipes, searchOrHeader } = useContext(RecipesContext);
   const getContext = useContext(RecipesContext);
   const sizeListRecipes = 12;
   const sizeListCategorys = 5;
@@ -24,9 +25,8 @@ const MealRecipePage = () => {
   return (
     <>
       <div>
-        {/** É necessario passar props pageTitle com o valor
-         * de: "Comidas" para o header */}
         <Header pageTitle="Comidas" />
+        {searchOrHeader ? <SearchBar /> : '' }
       </div>
 
       {/** Mostra 5 botões com as primeiras cateforias da requisição */}

@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import SearchBar from '../components/Searchbar';
+import RecipesContext from '../context/RecipesContext';
 
-const ExplorePage = () => (
-  <div>
+const ExplorePage = () => {
+  const { searchOrHeader } = useContext(RecipesContext);
+  return (
+    <div>
+      <Header pageTitle="Explorar" showSearch={ false } />
+      {searchOrHeader ? <SearchBar /> : '' }
+      <Footer />
+    </div>
+  );
+};
 
-    {/** É necessario passar props pageTitle com o valor
-    de: "Explorar" e showSearch = { false } para o header */}
-    <Header pageTitle="Explorar" showSearch={ false } />
-    <Footer />
-  </div>
-);
 export default ExplorePage;

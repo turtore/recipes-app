@@ -7,8 +7,18 @@ import RecipesContext from '../context/RecipesContext';
 
 // Recebe como props o titulo do header e se deve aparecer o botão de busca
 // Deixo como padrão o valor de 'pageTitle' e showSearch caso não passem props
-const Header = ({ pageTitle = 'Comidas' }) => {
+const Header = ({ pageTitle = 'Comidas', showSearch = true }) => {
   const { searchOrHeader, changeSearchOrHeader } = useContext(RecipesContext);
+
+  const btnSearch = () => (
+    <Button
+      type="button"
+      onClick={ () => changeSearchOrHeader(!searchOrHeader) }
+      className="btn btn-light"
+    >
+      <img src={ searchIcon } alt="icone-busca" data-testid="search-top-btn" />
+    </Button>
+  );
 
   return (
     <div className="text-center">
@@ -30,14 +40,7 @@ const Header = ({ pageTitle = 'Comidas' }) => {
         </h2>
 
         {/* aqui verifico se devo mostra o botão de busca */}
-        <Button
-          type="button"
-          onClick={ () => changeSearchOrHeader(!searchOrHeader) }
-          className="btn btn-light"
-          data-testid="search-input"
-        >
-          <img src={ searchIcon } alt="icone-busca" data-testid="search-top-btn" />
-        </Button>
+        { showSearch ? btnSearch() : ''}
       </div>
     </div>
   );
@@ -45,7 +48,7 @@ const Header = ({ pageTitle = 'Comidas' }) => {
 
 Header.propTypes = {
   pageTitle: PropTypes.string.isRequired,
-  // showSearch: PropTypes.bool.isRequired,
+  showSearch: PropTypes.bool.isRequired,
 };
 
 export default Header;
