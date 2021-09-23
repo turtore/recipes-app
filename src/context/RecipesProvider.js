@@ -1,37 +1,38 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import RecipesContext from './RecipesContext';
-import getMeal from '../services/theMealDB_API';
-import getCockTail from '../services/theCockTailDB_API';
+import recipeAPI from '../services/recipeAPI';
+
+// import theMealDBAPI from '../services/theMealDBAPI';
 
 function RecipesProvider({ children }) {
-  const { pathname } = useLocation();
-  const [recipes, setRecipes] = useState([]);
-  // const context = {};
+  const [mealOrDrink, setMealOrDrink] = useState('meal');
+  const [searchOrHeader, changeSearchOrHeader] = useState(false);
 
-  useEffect(() => {
-    async function listRecipes() {
-      switch (pathname) {
-      case '/comidas': {
-        const resultsMeal = await getMeal();
-        setRecipes(resultsMeal.meals);
-        break;
-      }
-      case '/bebidas': {
-        const resultsCockTail = await getCockTail();
-        setRecipes(resultsCockTail.drinks);
-        break;
-      }
-      default:
-        break;
-      }
+  const history = useHistory();
+
+  // esse component did update fica ouvindo o URL , caso seja /bebidas vai colocar drink, caso /comidas vai por meal como parametro no mealOrDrink
+  useEffect(() => history.listen((location) => {
+    if (location.pathname === '/comidas') {
+      setMealOrDrink('meal');
     }
-    listRecipes();
-  }, [pathname]);
+    if (location.pathname === '/bebidas') {
+      setMealOrDrink('drink');
+    }
+  }), [history, mealOrDrink]);
 
+  const context = {
+    recipeAPI,
+    mealOrDrink,
+    setMealOrDrink,
+    searchOrHeader,
+    changeSearchOrHeader,
+  };
+  // o log abaixo é provisorio para futuro uso
+  // console.log(setMealOrDrink);
   return (
-    <RecipesContext.Provider value={ { recipes } }>
+    <RecipesContext.Provider value={ context }>
       {children}
     </RecipesContext.Provider>
   );
