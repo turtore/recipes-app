@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import RecipesCards from '../components/RecipesCards';
 import RecipesContext from '../context/RecipesContext';
+import Footer from '../components/Footer';
 
 const MealRecipePage = () => {
   const { recipes, categorys, listRecipes } = useContext(RecipesContext);
@@ -69,6 +70,7 @@ const MealRecipePage = () => {
             ))
         }
       </div>
+      <Footer />
     </>
   );
 };
