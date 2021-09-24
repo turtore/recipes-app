@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useHistory } from 'react-router-dom';
 import {
   Container, Row, Col, Button,
   Image, Ratio, Card, CardGroup,
@@ -15,6 +15,7 @@ import Loading from '../components/Loading';
 
 const DetailsRecipePage = () => {
   // tambem poderia desestruturar o match das props para pegar o recipeID --> { match: { params: { recipeId } } }
+  const history = useHistory();
   const { recipeId } = useParams(); // id que vem da URL
   const [isLoading, setIsLoading] = useState(true);
   // const { mealOrDrink } = useContext(RecipesContext);
@@ -182,6 +183,7 @@ const DetailsRecipePage = () => {
               type="button"
               size="lg"
               data-testid="start-recipe-btn"
+              onClick={ () => history.push(`${pathname}/in-progress`) }
             >
               Iniciar Receita
             </Button>
