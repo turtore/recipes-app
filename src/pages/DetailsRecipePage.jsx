@@ -6,6 +6,7 @@ import {
   ListGroup,
 } from 'react-bootstrap';
 // import RecipesContext from '../context/RecipesContext';
+import copy from 'clipboard-copy';
 import fetchDetailRecipe,
 { fetchRecommendedRecipes } from '../services/detailRecipeEndPointsCall';
 import shareIcon from '../images/shareIcon.svg';
@@ -18,6 +19,7 @@ const DetailsRecipePage = () => {
   const history = useHistory();
   const { recipeId } = useParams(); // id que vem da URL
   const [isLoading, setIsLoading] = useState(true);
+  const [linkIsCopied, setLinkIsCopied] = useState(false);
   // const { mealOrDrink } = useContext(RecipesContext);
   const [recipeDetails, setRecipeDetails] = useState({}); // estado que recebe os detalhes da receita da requisição a API
   const [recommendedRecipes, setRecommendedRecipes] = useState([]); // estado que recebe as recomendações
@@ -72,6 +74,16 @@ const DetailsRecipePage = () => {
     return ingredientsOrMeasures;
   };
 
+  const handleShareIconClick = () => {
+    const THREE_SECONDS = 3000;
+    copy(window.location.href);
+    setLinkIsCopied(true);
+
+    setTimeout(() => {
+      setLinkIsCopied(false);
+    }, THREE_SECONDS);
+  };
+
   const ingredients = getIngredientsOrMeasures('strIngredient'); // strIngredient são as chaves que o objeto recipeDetails também retorna ex: (strIngredient1, strIngredient2)
   const measures = getIngredientsOrMeasures('strMeasure'); // strMeasure são as chaves que o objeto recipeDetails também retorna ex: (strMeasure1, strMeasure2)
   const { strCategory, strInstructions, strAlcoholic } = recipeDetails;
@@ -96,8 +108,8 @@ const DetailsRecipePage = () => {
         <Col xs={ 8 }>
           <h4 data-testid="recipe-title">{recipeDetails[`str${recipeType}`]}</h4>
         </Col>
-        <Col xs={ 2 }>
-          <img data-testid="share-btn" src={ shareIcon } alt="" />
+        <Col xs={ 2 } data-testid="share-btn" onClick={ handleShareIconClick }>
+          {linkIsCopied ? <span>Link copiado!</span> : <img src={ shareIcon } alt="" /> }
         </Col>
         <Col xs={ 1 }>
           <img data-testid="favorite-btn" src={ whiteHeartIcon } alt="" />
