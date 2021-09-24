@@ -1,0 +1,54 @@
+.container-cards {
+  border: 1px solid lightgray;
+  box-shadow: 0 0 10px 0 lightgray;
+  display: flex;
+  margin: 15px auto;
+  max-width: 350px;
+  padding: 5px;
+}
+
+.container-cards img {
+  align-self: flex-start;
+  cursor: pointer;
+}
+
+.img-card {
+  width: 50%;
+}
+
+.img-card img {
+  width: 100%;
+}
+
+.info-card {
+  color: gray;
+  margin-left: 10px;
+  width: 50%;
+}
+
+.info-card span {
+  display: block;
+}
+
+.category-card {
+  font-size: 15px;
+}
+
+.name-card {
+  color: black;
+  font-size: 20px;
+}
+
+.date-card {
+  color: black;
+  font-size: 15px;
+  margin-top: 10px;
+}
+
+.tag-card {
+  background-color: lightgray;
+  border: none;
+  border-radius: 5px;
+  margin-left: 2px;
+  margin-top: 15px;
+}
