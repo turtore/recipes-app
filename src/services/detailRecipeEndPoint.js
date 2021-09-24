@@ -1,19 +1,44 @@
 /*
   Função que faz a requisição a API com base no id da Receita que virá da URL (primeiro parâmetro)
-  O segundo parâmetro tem de ser um valor true or false:
+  O segundo parâmetro tem de ser um valor booleano:
     Se for true significa que é uma comida, caso contrário bebida.
 */
-
 const fetchDetailRecipe = async (recipeId, isMeal) => {
   const [recipeTypeURL, recipeTypeKey] = isMeal
     ? ['themealdb', 'meals']
     : ['thecocktaildb', 'drinks'];
 
   const fetchRecipe = await fetch(`https://www.${recipeTypeURL}.com/api/json/v1/1/lookup.php?i=${recipeId}`);
-  const response = await fetchRecipe.json(); // retorno é um objeto que pode ter a chave meals ou drinks dependendo do tipo de comida
-  const [data] = await response[recipeTypeKey]; // aqui é já é retornado o objeto com os detalhes da receita
+  const response = await fetchRecipe.json(); // retorno é um objeto que pode ter a chave 'meals' ou 'drinks' dependendo do tipo de comida
+  const [data] = await response[recipeTypeKey]; // response[recipeTypeKey] retorna um array de objetos. Portanto é desestruturado o primeiro elemento do array (envolvendo data em colchetes [data])
 
   return data; // retorna o objeto;
+};
+
+export const fetchRecommendedRecipes = async (isMeal) => {
+  // const SORT_LOGICAL_NUMBER = 0.5;
+
+  const [recipeTypeURL, recipeTypeKey] = !isMeal
+    ? ['themealdb', 'meals']
+    : ['thecocktaildb', 'drinks'];
+
+  const fetchRecipes = await fetch(`https://www.${recipeTypeURL}.com/api/json/v1/1/search.php?s=`);
+  const response = await fetchRecipes.json();
+  const data = await response[recipeTypeKey];
+
+  // const [
+  //   recipe1, recipe2,
+  //   recipe3, recipe4,
+  //   recipe5, recipe6,
+  // ] = data.sort(() => Math.random() - SORT_LOGICAL_NUMBER);
+
+  const [
+    recipe1, recipe2,
+    recipe3, recipe4,
+    recipe5, recipe6,
+  ] = data;
+
+  return [recipe1, recipe2, recipe3, recipe4, recipe5, recipe6]; // retorna o objeto;
 };
 
 export default fetchDetailRecipe;

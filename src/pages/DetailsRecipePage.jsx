@@ -1,19 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import { Container, Row, Col, Button, Image, Ratio, Card, CardGroup } from 'react-bootstrap';
-import fetchDetailRecipe from '../services/detailRecipeEndPoint';
+import {
+  Container, Row, Col, Button,
+  Image, Ratio, Card, CardGroup,
+  ListGroup,
+} from 'react-bootstrap';
+// import RecipesContext from '../context/RecipesContext';
+import fetchDetailRecipe,
+{ fetchRecommendedRecipes } from '../services/detailRecipeEndPoint';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
-import './pages-css/DetailsRecipePage.css';
+import './styles/DetailsRecipePage.css';
+import Loading from '../components/Loading';
 
 const DetailsRecipePage = () => {
   // tambem poderia desestruturar o match das props para pegar o recipeID --> { match: { params: { recipeId } } }
   const { recipeId } = useParams(); // id que vem da URL
-  const { pathname } = useLocation(); // URL atual completa
+  const [isLoading, setIsLoading] = useState(true);
+  // const { mealOrDrink } = useContext(RecipesContext);
   const [recipeDetails, setRecipeDetails] = useState({}); // estado que recebe os detalhes da receita da requisição a API
+  const [recommendedRecipes, setRecommendedRecipes] = useState([]);
   const [recipeType, setRecipeType] = useState(''); // estado que armazenará o tipo de receia (comida ou bebida)
   const [videoURL, setVideoURL] = useState(''); // estado que guarda a URL do vídeo se for uma receita de comida
-  const isMeal = pathname.includes('comidas'); // verifica se é comida ou bebida com base na URL
+  // const isMeal = (mealOrDrink === 'meal');
+  const { pathname } = useLocation();
+  const isMeal = pathname.includes('comidas');
 
   useEffect(() => { // useEffect responsável por fazer a requisição da receita e guardar as informações no estado recipeDetails
     const getRecipeDetails = async () => {
@@ -21,10 +32,18 @@ const DetailsRecipePage = () => {
 
       setRecipeDetails(myRecipeDetails);
       setRecipeType(isMeal ? 'Meal' : 'Drink');
+      setIsLoading(false);
+    };
+
+    const getRecommendedRecipes = async () => {
+      const myRecommendedRecipes = await fetchRecommendedRecipes(isMeal);
+
+      setRecommendedRecipes(myRecommendedRecipes);
     };
 
     getRecipeDetails();
-  }, []);
+    getRecommendedRecipes();
+  }, [isMeal, recipeId]);
 
   useEffect(() => {
     const getValidVideoURL = () => {
@@ -42,8 +61,12 @@ const DetailsRecipePage = () => {
 
   const getIngredientsOrMeasures = (ingredientOrMeasure) => {
     const ingredientsOrMeasures = Object.entries(recipeDetails)
-      .filter(([key, value]) => key.includes(ingredientOrMeasure) && value !== null)
-      .map(([, value]) => value);
+      .filter(([key, value]) => {
+        const validations = [value !== null, value !== ''];
+        const validationsOK = validations.every((validation) => validation);
+
+        return key.includes(ingredientOrMeasure) && validationsOK;
+      }).map(([, value]) => value);
 
     return ingredientsOrMeasures;
   };
@@ -51,6 +74,10 @@ const DetailsRecipePage = () => {
   const ingredients = getIngredientsOrMeasures('strIngredient');
   const measures = getIngredientsOrMeasures('strMeasure');
   const { strCategory, strInstructions } = recipeDetails;
+  const recommendedType = recipeType === 'Meal' ? 'Drink' : 'Meal';
+
+  if (isLoading) return <Loading />;
+
   return (
     <Container fluid>
       <Row>
@@ -80,22 +107,25 @@ const DetailsRecipePage = () => {
           <h6 data-testid="recipe-category">{strCategory}</h6>
         </Col>
       </Row>
-      <Row>
+      <Row style={ { marginTop: '1rem' } }>
         <Col>
           <h5>Ingredients</h5>
-          <ul>
+          <ListGroup>
             {ingredients.map((ingredient, index) => (
-              <li
+              <ListGroup.Item
                 data-testid={ `${index}-ingredient-name-and-measure` }
                 key={ `${ingredient} - ${measures[index]}` }
+                variant="light"
               >
-                {`${ingredient} - ${measures[index]}`}
-              </li>
+                {`${ingredient} - ${measures[index] === undefined
+                  ? 'to taste'
+                  : measures[index]}`}
+              </ListGroup.Item>
             ))}
-          </ul>
+          </ListGroup>
         </Col>
       </Row>
-      <Row>
+      <Row style={ { marginTop: '1rem' } }>
         <Col>
           <h5>Instructions</h5>
           <p data-testid="instructions">{ strInstructions }</p>
@@ -107,85 +137,47 @@ const DetailsRecipePage = () => {
             <h5>Vídeo</h5>
             <div style={ { width: 'auto', height: 'auto' } }>
               <Ratio aspectRatio="16x9">
-                <iframe title="youtube-video" src={ videoURL } />
+                <iframe title="youtube-video" src={ videoURL } data-testid="video" />
               </Ratio>
             </div>
           </Col>
         </Row>
       )}
-      <Row>
+      <Row style={ { marginTop: '1rem' } }>
         <Col>
-          <h5>Recomendadas</h5>
+          <h5>Recommended</h5>
         </Col>
       </Row>
       <Row className="recomendation-container">
         <CardGroup className="row flex-nowrap">
-          <Col>
-            <Card className="card-block" style={ { width: '9.7rem' } }>
-              <Card.Img variant="top" src="holder.js/100px160" />
-              <Card.Body>
-                <Card.Title>Card title</Card.Title>
-                <Card.Text>
-                  This is a wider card with supporting text below as a natural lead-in to
-                  additional content. This content is a little bit longer.
-                </Card.Text>
-              </Card.Body>
-              <Card.Footer>
-                <small className="text-muted">Last updated 3 mins ago</small>
-              </Card.Footer>
-            </Card>
-          </Col>
-          <Col>
-            <Card className="card-block" style={ { width: '9.7rem' } }>
-              <Card.Img variant="top" src="holder.js/100px160" />
-              <Card.Body>
-                <Card.Title>Card title</Card.Title>
-                <Card.Text>
-                  This is a wider card with supporting text below as a natural lead-in to
-                  additional content. This content is a little bit longer.
-                </Card.Text>
-              </Card.Body>
-              <Card.Footer>
-                <small className="text-muted">Last updated 3 mins ago</small>
-              </Card.Footer>
-            </Card>
-          </Col>
-          <Col>
-            <Card className="card-block" style={ { width: '9.7rem' } }>
-              <Card.Img variant="top" src="holder.js/100px160" />
-              <Card.Body>
-                <Card.Title>Card title</Card.Title>
-                <Card.Text>
-                  This is a wider card with supporting text below as a natural lead-in to
-                  additional content. This content is a little bit longer.
-                </Card.Text>
-              </Card.Body>
-              <Card.Footer>
-                <small className="text-muted">Last updated 3 mins ago</small>
-              </Card.Footer>
-            </Card>
-          </Col>
-          <Col>
-            <Card className="card-block" style={ { width: '9.7rem' } }>
-              <Card.Img variant="top" src="holder.js/100px160" />
-              <Card.Body>
-                <Card.Title>Card title</Card.Title>
-                <Card.Text>
-                  This is a wider card with supporting text below as a natural lead-in to
-                  additional content. This content is a little bit longer.
-                </Card.Text>
-              </Card.Body>
-              <Card.Footer>
-                <small className="text-muted">Last updated 3 mins ago</small>
-              </Card.Footer>
-            </Card>
-          </Col>
+          {recommendedRecipes.map((recipe, index) => (
+            <Col
+              key={ recipe[`id${recommendedType}`] }
+              data-testid={ `${index}-recomendation-card` }
+            >
+              <Card className="card-block" style={ { width: '9.7rem' } }>
+                <Card.Img variant="top" src={ recipe[`str${recommendedType}Thumb`] } />
+                <Card.Body>
+                  <Card.Subtitle className="mb-2 text-muted">
+                    {recipe.strCategory}
+                  </Card.Subtitle>
+                  <Card.Title
+                    data-testid={ `${index}-recomendation-title` }
+                  >
+                    {recipe[`str${recommendedType}`]}
+                  </Card.Title>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
         </CardGroup>
       </Row>
       <Row className="fixed-bottom">
-        <Col className="column-container">
+        <Col>
           <div className="d-grid gap-2 btn-container">
             <Button
+              style={ { width: '100%', borderRadius: '0' } }
+              className="fixed-bottom"
               variant="success"
               type="button"
               size="lg"
