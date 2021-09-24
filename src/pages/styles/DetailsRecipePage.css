@@ -8,9 +8,5 @@
 
 .recomendation-container {
   margin-bottom: 3.8rem;
-  overflow-x: auto !important;
+  overflow-x: auto;
 }
-/* 
-.recipe-image {
-  height: 25rem;
-} */
