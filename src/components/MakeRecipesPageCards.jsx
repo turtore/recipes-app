@@ -1,7 +1,16 @@
 import React from 'react';
 import './styles/cards.css';
+import { Link } from 'react-router-dom';
 import PropTypes, { string } from 'prop-types';
+import copy from 'clipboard-copy';
 import shareIcon from '../images/shareIcon.svg';
+
+/** Função para criar a URL e copiar ela */
+const handleClickShare = (typeValue, idValue) => {
+  const urlParts = window.location.href.split('/');
+  const newUrl = `${urlParts[0]}//${urlParts[2]}/${typeValue}s/${idValue}`;
+  copy(newUrl);
+};
 
 /** Recebe Valores via Props de Bebidas e Comidas */
 const MakeRecipesCards = ({ imgValue,
@@ -12,14 +21,18 @@ const MakeRecipesCards = ({ imgValue,
   indexValue,
   areaValue,
   alcoholicOrNotValue,
+  idValue,
+  typeValue,
 }) => (
   <div className="container-cards">
     <div className="img-card">
-      <img
-        data-testid={ `${indexValue}-horizontal-image` }
-        src={ imgValue }
-        alt={ nameValue }
-      />
+      <Link to={ `/${typeValue}s/${idValue}` }>
+        <img
+          data-testid={ `${indexValue}-horizontal-image` }
+          src={ imgValue }
+          alt={ nameValue }
+        />
+      </Link>
     </div>
     <div className="info-card">
       <span
@@ -32,7 +45,9 @@ const MakeRecipesCards = ({ imgValue,
         data-testid={ `${indexValue}-horizontal-name` }
         className="name-card"
       >
-        { nameValue }
+        <Link to={ `/${typeValue}s/${idValue}` }>
+          { nameValue }
+        </Link>
       </span>
       <span
         data-testid={ `${indexValue}-horizontal-done-date` }
@@ -54,11 +69,17 @@ const MakeRecipesCards = ({ imgValue,
           ))
       }
     </div>
-    <img
-      data-testid={ `${indexValue}-horizontal-share-btn` }
-      src={ shareIcon }
-      alt="Imagem de Compartilhamento"
-    />
+    <button
+      className="btn-share"
+      type="button"
+      onClick={ () => handleClickShare(typeValue, idValue) }
+    >
+      <img
+        data-testid={ `${indexValue}-horizontal-share-btn` }
+        src={ shareIcon }
+        alt="Imagem de Compartilhamento"
+      />
+    </button>
   </div>
 );
 
@@ -71,6 +92,8 @@ MakeRecipesCards.propTypes = {
   indexValue: PropTypes.number.isRequired,
   areaValue: PropTypes.string.isRequired,
   alcoholicOrNotValue: PropTypes.string.isRequired,
+  idValue: PropTypes.string.isRequired,
+  typeValue: PropTypes.string.isRequired,
 };
 
 export default MakeRecipesCards;

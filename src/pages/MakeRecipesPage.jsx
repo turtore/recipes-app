@@ -57,6 +57,8 @@ const MakeRecipesPage = () => {
               indexValue={ index }
               areaValue={ doneRecipe.area }
               alcoholicOrNotValue={ doneRecipe.alcoholicOrNot }
+              idValue={ doneRecipe.id }
+              typeValue={ doneRecipe.type }
             />
           )) : 'Nenhuma receita finalizada.'
       }
