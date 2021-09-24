@@ -6,11 +6,11 @@ import LoginPage from './pages/LoginPage';
 import DetailsRecipePage from './pages/DetailsRecipePage';
 import MealRecipePage from './pages/MealRecipePage';
 import CocktailRecipePage from './pages/CocktailRecipePage';
-import ExplorePage from './pages/ExplorePage';
-import DetailsMealRecipePage from './pages/DetailsMealRecipePage';
-import ProfilePage from './pages/ProfilePage';
-import MakeRecipesPage from './pages/MakeRecipesPage';
-import FavoritesRecipesPage from './pages/FavoritesRecipesPage';
+// import ExplorePage from './pages/ExplorePage';
+// import DetailsMealRecipePage from './pages/DetailsMealRecipePage';
+// import ProfilePage from './pages/ProfilePage';
+// import MakeRecipesPage from './pages/MakeRecipesPage';
+// import FavoritesRecipesPage from './pages/FavoritesRecipesPage';
 // import SearchBar from './components/Searchbar';
 
 function App() {
