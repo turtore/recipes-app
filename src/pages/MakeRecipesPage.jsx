@@ -1,12 +1,18 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Header from '../components/Header';
 import MakeRecipesCards from '../components/MakeRecipesPageCards';
 import SearchBar from '../components/Searchbar';
 import RecipesContext from '../context/RecipesContext';
 
 const MakeRecipesPage = () => {
+  const [filter, setFilter] = useState('');
   const { searchOrHeader } = useContext(RecipesContext);
   const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
+
+  /** Seta o tipo de filtro no estado */
+  const handleClickFilter = (filterValue) => {
+    setFilter(filterValue);
+  };
 
   return (
     <div>
@@ -17,18 +23,21 @@ const MakeRecipesPage = () => {
         <button
           data-testid="filter-by-all-btn"
           type="button"
+          onClick={ () => handleClickFilter('') }
         >
           All
         </button>
         <button
           data-testid="filter-by-food-btn"
           type="button"
+          onClick={ () => handleClickFilter('comida') }
         >
           Food
         </button>
         <button
           data-testid="filter-by-drink-btn"
           type="button"
+          onClick={ () => handleClickFilter('bebida') }
         >
           Driks
         </button>
@@ -36,6 +45,7 @@ const MakeRecipesPage = () => {
       <hr />
       {
         doneRecipes ? doneRecipes
+          .filter((doneRecipe) => doneRecipe.type.includes(filter))
           .map((doneRecipe, index) => (
             <MakeRecipesCards
               key={ index }
@@ -46,6 +56,7 @@ const MakeRecipesPage = () => {
               tagValue={ doneRecipe.tags }
               indexValue={ index }
               areaValue={ doneRecipe.area }
+              alcoholicOrNotValue={ doneRecipe.alcoholicOrNot }
             />
           )) : 'Nenhuma receita finalizada.'
       }
