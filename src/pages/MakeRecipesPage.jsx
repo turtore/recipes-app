@@ -45,6 +45,7 @@ const MakeRecipesPage = () => {
               dateValue={ doneRecipe.doneDate }
               tagValue={ doneRecipe.tags }
               indexValue={ index }
+              areaValue={ doneRecipe.area }
             />
           )) : 'Nenhuma receita finalizada.'
       }

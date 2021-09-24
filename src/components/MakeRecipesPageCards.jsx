@@ -10,6 +10,7 @@ const MakeRecipesCards = ({ imgValue,
   dateValue,
   tagValue,
   indexValue,
+  areaValue,
 }) => (
   <div className="container-cards">
     <div className="img-card">
@@ -24,7 +25,7 @@ const MakeRecipesCards = ({ imgValue,
         data-testid={ `${indexValue}-horizontal-top-text` }
         className="category-card"
       >
-        { categoryValue }
+        { `${areaValue} - ${categoryValue}` }
       </span>
       <span
         data-testid={ `${indexValue}-horizontal-name` }
@@ -67,6 +68,7 @@ MakeRecipesCards.propTypes = {
   dateValue: PropTypes.string.isRequired,
   tagValue: PropTypes.arrayOf(string).isRequired,
   indexValue: PropTypes.number.isRequired,
+  areaValue: PropTypes.string.isRequired,
 };
 
 export default MakeRecipesCards;
