@@ -11,8 +11,10 @@ import fetchDetailRecipe,
 { fetchRecommendedRecipes } from '../services/detailRecipeEndPointsCall';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 import './styles/DetailsRecipePage.css';
 import Loading from '../components/Loading';
+import setFavoriteRecipesToStorage from '../services/localStorageHandler';
 
 const DetailsRecipePage = () => {
   // tambem poderia desestruturar o match das props para pegar o recipeID --> { match: { params: { recipeId } } }
@@ -20,6 +22,7 @@ const DetailsRecipePage = () => {
   const { recipeId } = useParams(); // id que vem da URL
   const [isLoading, setIsLoading] = useState(true);
   const [linkIsCopied, setLinkIsCopied] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
   // const { mealOrDrink } = useContext(RecipesContext);
   const [recipeDetails, setRecipeDetails] = useState({}); // estado que recebe os detalhes da receita da requisição a API
   const [recommendedRecipes, setRecommendedRecipes] = useState([]); // estado que recebe as recomendações
@@ -89,6 +92,12 @@ const DetailsRecipePage = () => {
   const { strCategory, strInstructions, strAlcoholic } = recipeDetails;
   const recommendedType = recipeType === 'Meal' ? 'Drink' : 'Meal'; // aqui é feito o tipo de recomendação. Página é de comida? Então recomendação é de bebida.
 
+  const handleFavoriteIconClick = () => {
+    setIsFavorite(!isFavorite);
+
+    setFavoriteRecipesToStorage(isFavorite, recipeDetails, recipeType, isMeal);
+  };
+
   if (isLoading) return <Loading />;
 
   return (
@@ -111,8 +120,12 @@ const DetailsRecipePage = () => {
         <Col xs={ 2 } data-testid="share-btn" onClick={ handleShareIconClick }>
           {linkIsCopied ? <span>Link copiado!</span> : <img src={ shareIcon } alt="" /> }
         </Col>
-        <Col xs={ 1 }>
-          <img data-testid="favorite-btn" src={ whiteHeartIcon } alt="" />
+        <Col xs={ 1 } onClick={ handleFavoriteIconClick }>
+          <img
+            data-testid="favorite-btn"
+            src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
+            alt=""
+          />
         </Col>
       </Row>
       <Row>
