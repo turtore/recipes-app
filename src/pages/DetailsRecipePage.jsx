@@ -7,7 +7,7 @@ import {
 } from 'react-bootstrap';
 // import RecipesContext from '../context/RecipesContext';
 import fetchDetailRecipe,
-{ fetchRecommendedRecipes } from '../services/detailRecipeEndPoint';
+{ fetchRecommendedRecipes } from '../services/detailRecipeEndPointsCall';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import './styles/DetailsRecipePage.css';
@@ -19,23 +19,23 @@ const DetailsRecipePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   // const { mealOrDrink } = useContext(RecipesContext);
   const [recipeDetails, setRecipeDetails] = useState({}); // estado que recebe os detalhes da receita da requisição a API
-  const [recommendedRecipes, setRecommendedRecipes] = useState([]);
+  const [recommendedRecipes, setRecommendedRecipes] = useState([]); // estado que recebe as recomendações
   const [recipeType, setRecipeType] = useState(''); // estado que armazenará o tipo de receia (comida ou bebida)
   const [videoURL, setVideoURL] = useState(''); // estado que guarda a URL do vídeo se for uma receita de comida
   // const isMeal = (mealOrDrink === 'meal');
   const { pathname } = useLocation();
-  const isMeal = pathname.includes('comidas');
+  const isMeal = pathname.includes('comidas'); // se na URL tiver 'comidas' quer dizer que é a page de comidas e retorna true
 
-  useEffect(() => { // useEffect responsável por fazer a requisição da receita e guardar as informações no estado recipeDetails
+  useEffect(() => { // useEffect responsável principalmente por fazer a requisição da receita e guardar as informações no estado recipeDetails
     const getRecipeDetails = async () => {
       const myRecipeDetails = await fetchDetailRecipe(recipeId, isMeal);
 
       setRecipeDetails(myRecipeDetails);
-      setRecipeType(isMeal ? 'Meal' : 'Drink');
+      setRecipeType(isMeal ? 'Meal' : 'Drink'); // seta o estado do tipo de receita, será 'Meal' se o caminho da URL tiver comidas, se não 'Drink'. Isso é necessário para que essa página seja genérica.
       setIsLoading(false);
     };
 
-    const getRecommendedRecipes = async () => {
+    const getRecommendedRecipes = async () => { // Essa função faz a requisição e pega o array de 6 bebidas ou comidas recomendadas, se for renderizada uma pagina de comida, as recomendações serão bebidas
       const myRecommendedRecipes = await fetchRecommendedRecipes(isMeal);
 
       setRecommendedRecipes(myRecommendedRecipes);
@@ -45,12 +45,12 @@ const DetailsRecipePage = () => {
     getRecommendedRecipes();
   }, [isMeal, recipeId]);
 
-  useEffect(() => {
+  useEffect(() => { // Esse useEffect serve para pegar o URL embedado do vídeo do youtube
     const getValidVideoURL = () => {
       const { strYoutube } = recipeDetails;
       if (strYoutube !== undefined) {
         const CORRECT_INITIAL_URL = 'https://www.youtube.com/embed/';
-        const videoID = strYoutube.split('=')[1];
+        const videoID = strYoutube.split('=')[1]; // o Link vem originalmente neste formato: https://www.youtube.com/watch?v=VVnZd8A84z4. A variavel videoID retorna VVnZd8A84z4 neste caso.
 
         setVideoURL(`${CORRECT_INITIAL_URL}${videoID}`);
       }
@@ -71,10 +71,10 @@ const DetailsRecipePage = () => {
     return ingredientsOrMeasures;
   };
 
-  const ingredients = getIngredientsOrMeasures('strIngredient');
-  const measures = getIngredientsOrMeasures('strMeasure');
-  const { strCategory, strInstructions } = recipeDetails;
-  const recommendedType = recipeType === 'Meal' ? 'Drink' : 'Meal';
+  const ingredients = getIngredientsOrMeasures('strIngredient'); // strIngredient são as chaves que o objeto recipeDetails também retorna ex: (strIngredient1, strIngredient2)
+  const measures = getIngredientsOrMeasures('strMeasure'); // strMeasure são as chaves que o objeto recipeDetails também retorna ex: (strMeasure1, strMeasure2)
+  const { strCategory, strInstructions, strAlcoholic } = recipeDetails;
+  const recommendedType = recipeType === 'Meal' ? 'Drink' : 'Meal'; // aqui é feito o tipo de recomendação. Página é de comida? Então recomendação é de bebida.
 
   if (isLoading) return <Loading />;
 
@@ -104,7 +104,7 @@ const DetailsRecipePage = () => {
       </Row>
       <Row>
         <Col>
-          <h6 data-testid="recipe-category">{strCategory}</h6>
+          <h6 data-testid="recipe-category">{isMeal ? strCategory : strAlcoholic}</h6>
         </Col>
       </Row>
       <Row style={ { marginTop: '1rem' } }>
