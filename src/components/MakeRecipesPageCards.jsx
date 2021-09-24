@@ -1,6 +1,7 @@
 import React from 'react';
 import './styles/cards.css';
 import { Link } from 'react-router-dom';
+import { OverlayTrigger, Popover } from 'react-bootstrap';
 import PropTypes, { string } from 'prop-types';
 import copy from 'clipboard-copy';
 import shareIcon from '../images/shareIcon.svg';
@@ -69,17 +70,30 @@ const MakeRecipesCards = ({ imgValue,
           ))
       }
     </div>
-    <button
-      className="btn-share"
-      type="button"
-      onClick={ () => handleClickShare(typeValue, idValue) }
+
+    { /** Components bootstrap para mostrar mensagem de Link copiado! */ }
+    <OverlayTrigger
+      trigger="click"
+      overlay={
+        <Popover id={ `popover-positioned-${idValue}` }>
+          <Popover.Body>
+            Link copiado!
+          </Popover.Body>
+        </Popover>
+      }
     >
-      <img
-        data-testid={ `${indexValue}-horizontal-share-btn` }
-        src={ shareIcon }
-        alt="Imagem de Compartilhamento"
-      />
-    </button>
+      <button
+        className="btn-share"
+        type="button"
+        onClick={ () => handleClickShare(typeValue, idValue) }
+      >
+        <img
+          data-testid={ `${indexValue}-horizontal-share-btn` }
+          src={ shareIcon }
+          alt="Imagem de Compartilhamento"
+        />
+      </button>
+    </OverlayTrigger>
   </div>
 );
 
