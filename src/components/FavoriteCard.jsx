@@ -5,6 +5,7 @@ import { OverlayTrigger, Popover } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import copy from 'clipboard-copy';
 import shareIcon from '../images/shareIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 /** Função para criar a URL e copiar ela */
 const handleClickShare = (typeValue, idValue) => {
@@ -13,8 +14,28 @@ const handleClickShare = (typeValue, idValue) => {
   copy(newUrl);
 };
 const handleClickUnfavorite = (typeValue, idValue) => {
-  console.log('lógica de desfavoritar');
-  console.log(typeValue, idValue);
+  // console.log(typeValue, idValue);
+  const tempLocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes')); // read and convert to object
+  // console.log('lógica de desfavoritar');
+  // console.log(tempLocalStorage.length);
+  for (let i = 0; i < tempLocalStorage.length; i += 1) {
+    // console.log(tempLocalStorage[i]);
+    deleteItem(tempLocalStorage, idValue);
+    // if (tempLocalStorage[i].id === idValue) { // check if key exists
+    //   console.log('sou igual');
+    // }
+  }
+  localStorage.setItem('favoriteRecipes', JSON.stringify(tempLocalStorage));
+};
+
+const deleteItem = (item, idValue) => {
+  for (let i = 0; i < item.length; i += 1) {
+    if (item[i].id === idValue) {
+      console.log('sou igual');
+      // delete item[i];
+    }
+    console.log(item);
+  }
 };
 
 /** Recebe Valores via Props de Bebidas e Comidas */
@@ -78,18 +99,18 @@ const FavoriteCard = ({ indexValue,
       </button>
 
       {/* botão de remover dos favoritos */}
-      <button
-        className="btn-unfavorite"
-        type="button"
-        onClick={ () => handleClickUnfavorite(typeValue, idValue) }
-      >
-        <img
-        //   data-testid={ `${indexValue}-horizontal-share-btn` }
-        //   src={ shareIcon }
-          alt="Imagem de Desfavoritar"
-        />
-      </button>
     </OverlayTrigger>
+    <button
+      className="btn-unfavorite"
+      type="button"
+      onClick={ () => handleClickUnfavorite(typeValue, idValue) }
+    >
+      <img
+        data-testid={ `${indexValue}-horizontal-share-btn` }
+        src={ blackHeartIcon }
+        alt="Imagem de Desfavoritar"
+      />
+    </button>
   </div>
 );
 
