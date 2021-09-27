@@ -16,7 +16,7 @@ const ExploreMeal = () => (
       </Button>
       <Button
         variant="secondary"
-        href="/explorar/comidas/origem"
+        href="/explorar/comidas/area"
         data-testid="explore-by-area"
       >
         Por Local de Origem
