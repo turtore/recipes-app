@@ -26,7 +26,7 @@ const ExploreMeal = () => {
         </Button>
         <Button
           variant="secondary"
-          data-testid="explore-surprise"randomRecipe
+          data-testid="explore-surprise"
           onClick={ handleClickRandomCockTail }
         >
           Me Surpreenda!
