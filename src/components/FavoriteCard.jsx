@@ -13,28 +13,14 @@ const handleClickShare = (typeValue, idValue) => {
   const newUrl = `${urlParts[0]}//${urlParts[2]}/${typeValue}s/${idValue}`;
   copy(newUrl);
 };
-const handleClickUnfavorite = (typeValue, idValue) => {
-  // console.log(typeValue, idValue);
-  const tempLocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes')); // read and convert to object
-  // console.log('lógica de desfavoritar');
-  // console.log(tempLocalStorage.length);
-  for (let i = 0; i < tempLocalStorage.length; i += 1) {
-    // console.log(tempLocalStorage[i]);
-    deleteItem(tempLocalStorage, idValue);
-    // if (tempLocalStorage[i].id === idValue) { // check if key exists
-    //   console.log('sou igual');
-    // }
-  }
-  localStorage.setItem('favoriteRecipes', JSON.stringify(tempLocalStorage));
-};
 
 const deleteItem = (item, idValue) => {
   for (let i = 0; i < item.length; i += 1) {
     if (item[i].id === idValue) {
       console.log('sou igual');
-      // delete item[i];
+      delete item[i];
     }
-    console.log(item);
+    // console.log(item);
   }
 };
 
@@ -47,72 +33,85 @@ const FavoriteCard = ({ indexValue,
   categoryValue,
   alcoholicOrNotValue,
   nameValue,
-}) => (
-  <div className="container-cards">
-    <div className="img-card">
-      <Link to={ `/${typeValue}s/${idValue}` }>
-        <img
-          data-testid={ `${indexValue}-horizontal-image` }
-          src={ imgValue }
-          alt={ nameValue }
-        />
-      </Link>
-    </div>
-    <div className="info-card">
-      <span
-        data-testid={ `${indexValue}-horizontal-top-text` }
-        className="category-card"
-      >
-        { `${areaValue || alcoholicOrNotValue} - ${categoryValue}` }
-      </span>
-      <span
-        data-testid={ `${indexValue}-horizontal-name` }
-        className="name-card"
-      >
-        <Link to={ `/${typeValue}s/${idValue}` }>
-          { nameValue }
-        </Link>
-      </span>
-    </div>
+  setFavoriteRecipes,
+}) => {
+  // const { setFavoriteRecipes } = useContext(RecipesContext);
 
-    { /** Components bootstrap para mostrar mensagem de Link copiado! */ }
-    <OverlayTrigger
-      trigger="click"
-      overlay={
-        <Popover id={ `popover-positioned-${idValue}` }>
-          <Popover.Body>
-            Link copiado!
-          </Popover.Body>
-        </Popover>
-      }
-    >
+  const handleClickUnfavorite = (checkId) => {
+    const tempLocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    deleteItem(tempLocalStorage, checkId);
+    localStorage.setItem('favoriteRecipes', JSON.stringify(tempLocalStorage));
+    setFavoriteRecipes(tempLocalStorage);
+  };
+  return (
+    <div className="container-cards">
+      <div className="img-card">
+        <Link to={ `/${typeValue}s/${idValue}` }>
+          <img
+            data-testid={ `${indexValue}-horizontal-image` }
+            src={ imgValue }
+            alt={ nameValue }
+          />
+        </Link>
+      </div>
+      <div className="info-card">
+        <span
+          data-testid={ `${indexValue}-horizontal-top-text` }
+          className="category-card"
+        >
+          { `${areaValue || alcoholicOrNotValue} - ${categoryValue}` }
+        </span>
+        <span
+          data-testid={ `${indexValue}-horizontal-name` }
+          className="name-card"
+        >
+          <Link to={ `/${typeValue}s/${idValue}` }>
+            { nameValue }
+          </Link>
+        </span>
+      </div>
+
+      { /** Components bootstrap para mostrar mensagem de Link copiado! */ }
+      <OverlayTrigger
+        trigger="click"
+        overlay={
+          <Popover id={ `popover-positioned-${idValue}` }>
+            <Popover.Body>
+              Link copiado!
+            </Popover.Body>
+          </Popover>
+        }
+      >
+        <button
+          className="btn-share"
+          type="button"
+          onClick={ () => handleClickShare(typeValue, idValue) }
+        >
+          <img
+            data-testid={ `${indexValue}-horizontal-share-btn` }
+            src={ shareIcon }
+            alt="Imagem de Compartilhamento"
+          />
+        </button>
+
+        {/* botão de remover dos favoritos */}
+      </OverlayTrigger>
       <button
-        className="btn-share"
+        data-testid={ `${indexValue}-horizontal-favorite-btn` }
+        src={ blackHeartIcon }
+        className="btn-unfavorite"
         type="button"
-        onClick={ () => handleClickShare(typeValue, idValue) }
+        onClick={ () => handleClickUnfavorite(idValue) }
       >
         <img
-          data-testid={ `${indexValue}-horizontal-share-btn` }
-          src={ shareIcon }
-          alt="Imagem de Compartilhamento"
+          data-testid={ `${indexValue}-horizontal-favorite-btn` }
+          src={ blackHeartIcon }
+          alt="Imagem de Desfavoritar"
         />
       </button>
-
-      {/* botão de remover dos favoritos */}
-    </OverlayTrigger>
-    <button
-      className="btn-unfavorite"
-      type="button"
-      onClick={ () => handleClickUnfavorite(typeValue, idValue) }
-    >
-      <img
-        data-testid={ `${indexValue}-horizontal-share-btn` }
-        src={ blackHeartIcon }
-        alt="Imagem de Desfavoritar"
-      />
-    </button>
-  </div>
-);
+    </div>
+  );
+};
 
 FavoriteCard.propTypes = {
   imgValue: PropTypes.string.isRequired,
@@ -123,6 +122,7 @@ FavoriteCard.propTypes = {
   alcoholicOrNotValue: PropTypes.string.isRequired,
   idValue: PropTypes.string.isRequired,
   typeValue: PropTypes.string.isRequired,
+  setFavoriteRecipes: PropTypes.func.isRequired,
 };
 
 export default FavoriteCard;

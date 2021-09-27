@@ -4,14 +4,12 @@ import { useHistory } from 'react-router-dom';
 import RecipesContext from './RecipesContext';
 import recipeAPI from '../services/recipeAPI';
 // import theMealDBAPI from '../services/theMealDBAPI';
-const START_FAVORITES = JSON.parse(localStorage.getItem('favoriteRecipes'));
 
 function RecipesProvider({ children }) {
   const [recipes, setRecipes] = useState([]);
   const [categorys, setCategorys] = useState([]);
   const [mealOrDrink, setMealOrDrink] = useState('meal');
   const [searchOrHeader, changeSearchOrHeader] = useState(false);
-  const [favoriteRecipes, setFavoriteRecipes] = useState(START_FAVORITES);
 
   const history = useHistory();
 
@@ -35,8 +33,6 @@ function RecipesProvider({ children }) {
     categorys,
     setRecipes,
     setCategorys,
-    favoriteRecipes,
-    setFavoriteRecipes,
   };
 
   // o log abaixo é provisorio para futuro uso
