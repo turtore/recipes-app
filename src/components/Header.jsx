@@ -10,6 +10,10 @@ import RecipesContext from '../context/RecipesContext';
 const Header = ({ pageTitle = 'Comidas', showSearch = true }) => {
   const { searchOrHeader, changeSearchOrHeader } = useContext(RecipesContext);
 
+  const style = {
+    paddingTop: '4px',
+  };
+
   const btnSearch = () => (
     <Button
       type="button"
@@ -35,7 +39,7 @@ const Header = ({ pageTitle = 'Comidas', showSearch = true }) => {
           />
         </Button>
 
-        <h2 data-testid="page-title">
+        <h2 data-testid="page-title" style={ style }>
           { pageTitle }
         </h2>
 
