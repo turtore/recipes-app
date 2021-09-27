@@ -10,6 +10,7 @@ import DetailsMealRecipePage from './pages/DetailsMealRecipePage';
 import ProfilePage from './pages/ProfilePage';
 import MakeRecipesPage from './pages/MakeRecipesPage';
 import FavoritesRecipesPage from './pages/FavoritesRecipesPage';
+// import ProgressCocktailRecipePage from './pages/ProgressCocktailRecipePage';
 // import SearchBar from './components/Searchbar';
 
 function App() {
@@ -24,23 +25,21 @@ function App() {
       <Route exact path="/receitas-feitas" component={ MakeRecipesPage } />
       <Route exact path="/receitas-favoritas" component={ FavoritesRecipesPage } />
       {/* <Route exact path="/sb" component={ SearchBar } /> */}
-      {/* <Route exact path="/comidas/:id-da-receita" component={ DetailsMealRecipesPage } />
-      <Route
+      {/* <Route
         exact
         path="/bebidas/:id-da-receita"
         component={ DetailsCocktailRecipesPage }
-      />
-      <Route
+      /> */}
+      {/* <Route
         exact
         path="/comidas/:id-da-receita/in-progress"
         component={ ProgressMealRecipePage }
-      />
-      <Route
+      /> */}
+      {/* <Route
         exact
         path="/bebidas/:id-da-receita/in-progress"
         component={ ProgressCocktailRecipePage }
-      />
-      */}
+      /> */}
     </Switch>
   );
 }
