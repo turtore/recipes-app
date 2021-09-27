@@ -1,0 +1,12 @@
+.column-container {
+  padding: 0;
+}
+
+.column-container > h5 {
+  padding-left: 0.6rem;
+}
+
+.recomendation-container {
+  margin-bottom: 3.8rem;
+  overflow-x: auto;
+}
