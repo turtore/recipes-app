@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { CardGroup, Card } from 'react-bootstrap';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
 import fetchIngredients from '../services/exploreIngredientsEndPointsCall';
+import RecipesContext from '../context/RecipesContext';
 
 const ExploreIngredients = () => {
   const { pathname } = useLocation();
   const [ingredients, setIngredients] = useState([]);
   const isMeal = pathname.includes('comidas');
+  const { setExploredIngredient } = useContext(RecipesContext);
+  const history = useHistory();
 
   useEffect(() => {
     const getTwelveIngredients = async () => {
@@ -31,6 +34,11 @@ const ExploreIngredients = () => {
     getTwelveIngredients();
   }, [isMeal]);
 
+  const handleClickIngredient = (ingredient) => {
+    setExploredIngredient(ingredient);
+    history.push(isMeal ? '/comidas' : '/bebidas');
+  };
+
   const cardStyle = {
     width: '9.7rem',
     textAlign: 'center',
@@ -49,6 +57,7 @@ const ExploreIngredients = () => {
             className="card-block"
             style={ cardStyle }
             data-testid={ `${index}-ingredient-card` }
+            onClick={ () => handleClickIngredient(ingredientName) }
           >
             <Card.Img
               variant="top"

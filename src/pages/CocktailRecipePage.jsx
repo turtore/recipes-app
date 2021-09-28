@@ -15,15 +15,22 @@ const CocktailRecipePage = () => {
     setRecipes,
     setCategorys,
     setMealOrDrink,
+    exploredIngredient,
+    setExploredIngredient,
   } = useContext(RecipesContext);
   const sizeListRecipes = 12;
   const sizeListCategorys = 5;
 
   /** Faz as requisições para mostrar as categorias e as receitas */
   const requestAPI = async () => {
-    const dataCockTails = await recipeAPI('name', '', 'drink');
+    if (exploredIngredient !== '') {
+      const apiResponse = await recipeAPI('ingredients', exploredIngredient, 'drink');
+      setRecipes(apiResponse.drinks);
+    } else {
+      const dataCockTails = await recipeAPI('name', '', 'drink');
+      setRecipes(dataCockTails.drinks);
+    }
     const dataCategorys = await recipeAPI('listCategorys', '', 'drink');
-    setRecipes(dataCockTails.drinks);
     setCategorys(dataCategorys.drinks);
   };
 
@@ -41,6 +48,10 @@ const CocktailRecipePage = () => {
   useEffect(() => {
     requestAPI();
     setMealOrDrink('drink');
+
+    return () => {
+      setExploredIngredient('');
+    };
   }, []);
 
   return (
