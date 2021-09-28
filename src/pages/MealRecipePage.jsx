@@ -21,7 +21,7 @@ const MealRecipePage = () => {
   /** Faz as requisições para mostrar as categorias e as receitas */
   const requestAPI = async () => {
     const dataMeal = await recipeAPI('name', '', 'meal');
-    const dataCategorys = await recipeAPI('listCategorys', 'c', 'meal');
+    const dataCategorys = await recipeAPI('listCategorys', '', 'meal');
     setRecipes(dataMeal.meals);
     setCategorys(dataCategorys.meals);
   };

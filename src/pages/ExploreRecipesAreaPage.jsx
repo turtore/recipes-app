@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import RecipesCards from '../components/RecipesCards';
@@ -14,20 +14,21 @@ const ExploreRecipesAreaPage = () => {
     setRecipes,
     setCategorys,
   } = useContext(RecipesContext);
-  const [filterArea, setFilterAreal] = useState('');
   const sizeListRecipes = 12;
 
   /** Seta no estado o valor vindo do filtro */
-  const handleFilterArea = (event) => {
+  const handleFilterArea = async (event) => {
     const { target: { value } } = event;
-    setFilterAreal(value);
+    const dataFilterMeal = await recipeAPI('category', value, 'meal', 'a');
+    console.log(dataFilterMeal, value);
+    setRecipes(dataFilterMeal.meals);
   };
 
   /** Faz as requisições para mostrar as categorias por area e as receitas */
   useEffect(() => {
     const requestAPI = async () => {
       const dataMeal = await recipeAPI('name', '', 'meal');
-      const dataArea = await recipeAPI('listCategorys', 'a', 'meal');
+      const dataArea = await recipeAPI('listCategorys', '', 'meal', 'a');
       setCategorys(dataArea.meals);
       setRecipes(dataMeal.meals);
     };
@@ -69,7 +70,6 @@ const ExploreRecipesAreaPage = () => {
       <div style={ { display: 'flex', flexWrap: 'wrap' } }>
         {
           recipes
-            .filter((recipe) => recipe.strArea.includes(filterArea))
             .slice(0, sizeListRecipes)
             .map((recipe, index) => (
               <Link key={ index } to={ `/comidas/${recipe.idMeal}` }>

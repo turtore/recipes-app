@@ -1,4 +1,9 @@
-export default async function recipeAPI(caseInput, inputValue, mealOrDrink) {
+export default async function recipeAPI(
+  caseInput,
+  inputValue,
+  mealOrDrink,
+  filterType = 'c',
+) {
   const checkApiUrl = (checkUrl) => {
     if (checkUrl === 'meal') {
       return 'https://www.themealdb.com/api/json/v1/1/';
@@ -27,15 +32,15 @@ export default async function recipeAPI(caseInput, inputValue, mealOrDrink) {
     const firstLetter = await requestFirstLetter.json();
     return firstLetter;
   }
-  /** Pesquisa receita por categoria */
+  /** Pesquisa receita por categoria - valor do filterType (c = category / a = area) */
   case 'category': {
-    const requestCategorys = await fetch(`${apiUrl}filter.php?c=${inputValue}`);
-    const responseCategorys = await requestCategorys.json();
-    return responseCategorys;
+    const request = await fetch(`${apiUrl}filter.php?${filterType}=${inputValue}`);
+    const response = await request.json();
+    return response;
   }
-  /** Pesquisa as categorias - valor do inputValue (c = category / a = area) */
+  /** Pesquisa as categorias - valor do filterType (c = category / a = area) */
   case 'listCategorys': {
-    const requestCategorys = await fetch(`${apiUrl}list.php?${inputValue}=list`);
+    const requestCategorys = await fetch(`${apiUrl}list.php?${filterType}=list`);
     const responseCategorys = await requestCategorys.json();
     return responseCategorys;
   }
