@@ -92,7 +92,9 @@ const CocktailRecipePage = () => {
             ))
         }
       </div>
-
+      <h2>
+        {exploredIngredient !== '' && `Filtro de ingrediente: ${exploredIngredient}`}
+      </h2>
       {/** Renderiza os Cards com as Comidas */}
       <div style={ { display: 'flex', flexWrap: 'wrap' } }>
         {
