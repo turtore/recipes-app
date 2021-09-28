@@ -10,6 +10,7 @@ function RecipesProvider({ children }) {
   const [categorys, setCategorys] = useState([]);
   const [mealOrDrink, setMealOrDrink] = useState('meal');
   const [searchOrHeader, changeSearchOrHeader] = useState(false);
+  const [exploredIngredient, setExploredIngredient] = useState('');
 
   const history = useHistory();
 
@@ -33,6 +34,8 @@ function RecipesProvider({ children }) {
     categorys,
     setRecipes,
     setCategorys,
+    exploredIngredient,
+    setExploredIngredient,
   };
 
   // o log abaixo é provisorio para futuro uso

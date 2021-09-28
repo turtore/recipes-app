@@ -9,12 +9,10 @@ import {
 import copy from 'clipboard-copy';
 import fetchDetailRecipe,
 { fetchRecommendedRecipes } from '../services/detailRecipeEndPointsCall';
-import shareIcon from '../images/shareIcon.svg';
-import whiteHeartIcon from '../images/whiteHeartIcon.svg';
-import blackHeartIcon from '../images/blackHeartIcon.svg';
 import './styles/DetailsRecipePage.css';
 import Loading from '../components/Loading';
 import setFavoriteRecipesToStorage from '../services/localStorageHandler';
+import DetailsIcons from '../components/DetailsIcons';
 
 const DetailsRecipePage = () => {
   // tambem poderia desestruturar o match das props para pegar o recipeID --> { match: { params: { recipeId } } }
@@ -82,8 +80,9 @@ const DetailsRecipePage = () => {
     copy(window.location.href);
     setLinkIsCopied(true);
 
-    setTimeout(() => {
+    const myTimeout = setTimeout(() => {
       setLinkIsCopied(false);
+      clearTimeout(myTimeout);
     }, THREE_SECONDS);
   };
 
@@ -114,17 +113,15 @@ const DetailsRecipePage = () => {
         </Col>
       </Row>
       <Row className="mt-3">
-        <Col xs={ 8 }>
+        <Col xs={ 9 }>
           <h4 data-testid="recipe-title">{recipeDetails[`str${recipeType}`]}</h4>
         </Col>
-        <Col xs={ 2 } data-testid="share-btn" onClick={ handleShareIconClick }>
-          {linkIsCopied ? <span>Link copiado!</span> : <img src={ shareIcon } alt="" /> }
-        </Col>
-        <Col xs={ 1 } onClick={ handleFavoriteIconClick }>
-          <img
-            data-testid="favorite-btn"
-            src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
-            alt=""
+        <Col xs={ 3 }>
+          <DetailsIcons
+            handleFavoriteIconClick={ handleFavoriteIconClick }
+            handleShareIconClick={ handleShareIconClick }
+            isFavorite={ isFavorite }
+            linkIsCopied={ linkIsCopied }
           />
         </Col>
       </Row>
