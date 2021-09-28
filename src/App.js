@@ -12,6 +12,8 @@ import ProfilePage from './pages/ProfilePage';
 import MakeRecipesPage from './pages/MakeRecipesPage';
 import FavoritesRecipesPage from './pages/FavoritesRecipesPage';
 import ExploreIngredients from './pages/ExploreIngredients';
+import ExploreRecipesAreaPage from './pages/ExploreRecipesAreaPage';
+import NotFound from './pages/NotFound';
 // import SearchBar from './components/Searchbar';
 
 function App() {
@@ -40,6 +42,8 @@ function App() {
         component={ ExploreIngredients }
       />
       <Route exact path="/explorar/:recipe" component={ ExploreRecipesPage } />
+      <Route exact path="/explorar/bebidas/area" component={ NotFound } />
+      <Route exact path="/explorar/:recipe/:area" component={ ExploreRecipesAreaPage } />
       <Route exact path="/perfil" component={ ProfilePage } />
       <Route exact path="/receitas-feitas" component={ MakeRecipesPage } />
       <Route exact path="/receitas-favoritas" component={ FavoritesRecipesPage } />
