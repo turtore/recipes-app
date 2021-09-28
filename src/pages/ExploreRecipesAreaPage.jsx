@@ -46,7 +46,7 @@ const ExploreRecipesAreaPage = () => {
         onChange={ (event) => handleFilterArea(event) }
       >
         <option
-          data-testid="all-option"
+          data-testid="All-option"
           value=""
         >
           All
