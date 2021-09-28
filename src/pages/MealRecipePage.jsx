@@ -14,15 +14,23 @@ const MealRecipePage = () => {
     searchOrHeader,
     setRecipes,
     setCategorys,
+    exploredIngredient,
+    setExploredIngredient,
   } = useContext(RecipesContext);
   const sizeListRecipes = 12;
   const sizeListCategorys = 5;
 
   /** Faz as requisições para mostrar as categorias e as receitas */
   const requestAPI = async () => {
-    const dataMeal = await recipeAPI('name', '', 'meal');
+    if (exploredIngredient !== '') {
+      const apiResponse = await recipeAPI('ingredients', exploredIngredient, 'meal');
+      setRecipes(apiResponse.meals);
+    } else {
+      const dataMeal = await recipeAPI('name', '', 'meal');
+      setRecipes(dataMeal.meals);
+    }
+
     const dataCategorys = await recipeAPI('listCategorys', '', 'meal');
-    setRecipes(dataMeal.meals);
     setCategorys(dataCategorys.meals);
   };
 
@@ -39,6 +47,10 @@ const MealRecipePage = () => {
 
   useEffect(() => {
     requestAPI();
+
+    return () => {
+      setExploredIngredient('');
+    };
   }, []);
 
   return (
@@ -72,7 +84,9 @@ const MealRecipePage = () => {
             ))
         }
       </div>
-
+      <h2>
+        {exploredIngredient !== '' && `Filtro de ingrediente: ${exploredIngredient}`}
+      </h2>
       {/** Renderiza os Cards com as Comidas */}
       <div style={ { display: 'flex', flexWrap: 'wrap' } }>
         {

@@ -1,4 +1,9 @@
-export default async function recipeAPI(caseInput, inputValue, mealOrDrink) {
+export default async function recipeAPI(
+  caseInput,
+  inputValue,
+  mealOrDrink,
+  filterType = 'c',
+) {
   const checkApiUrl = (checkUrl) => {
     if (checkUrl === 'meal') {
       return 'https://www.themealdb.com/api/json/v1/1/';
@@ -27,17 +32,23 @@ export default async function recipeAPI(caseInput, inputValue, mealOrDrink) {
     const firstLetter = await requestFirstLetter.json();
     return firstLetter;
   }
-  /** Pesquisa receita por categoria */
+  /** Pesquisa receita por categoria - valor do filterType (c = category / a = area) */
   case 'category': {
-    const requestCategorys = await fetch(`${apiUrl}filter.php?c=${inputValue}`);
+    const request = await fetch(`${apiUrl}filter.php?${filterType}=${inputValue}`);
+    const response = await request.json();
+    return response;
+  }
+  /** Pesquisa as categorias - valor do filterType (c = category / a = area) */
+  case 'listCategorys': {
+    const requestCategorys = await fetch(`${apiUrl}list.php?${filterType}=list`);
     const responseCategorys = await requestCategorys.json();
     return responseCategorys;
   }
-  /** Pesquisa as categorias */
-  case 'listCategorys': {
-    const requestCategorys = await fetch(`${apiUrl}list.php?c=list`);
-    const responseCategorys = await requestCategorys.json();
-    return responseCategorys;
+  /** Retorna 1 receita random */
+  case 'randomRecipe': {
+    const requestRandom = await fetch(`${apiUrl}random.php`);
+    const responseRandom = await requestRandom.json();
+    return responseRandom;
   }
   default:
     return 'parametro, invalido';

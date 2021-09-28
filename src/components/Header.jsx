@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
+import { useHistory } from 'react-router';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
 import RecipesContext from '../context/RecipesContext';
@@ -9,6 +10,11 @@ import RecipesContext from '../context/RecipesContext';
 // Deixo como padrão o valor de 'pageTitle' e showSearch caso não passem props
 const Header = ({ pageTitle = 'Comidas', showSearch = true }) => {
   const { searchOrHeader, changeSearchOrHeader } = useContext(RecipesContext);
+  const history = useHistory();
+
+  const style = {
+    paddingTop: '4px',
+  };
 
   const btnSearch = () => (
     <Button
@@ -20,13 +26,17 @@ const Header = ({ pageTitle = 'Comidas', showSearch = true }) => {
     </Button>
   );
 
+  const goProfile = () => {
+    history.push('/perfil');
+  };
+
   return (
     <div className="text-center">
       <div className="btn-group">
         <Button
           className="btn btn-light"
           type="button"
-          href="/perfil"
+          onClick={ goProfile }
         >
           <img
             src={ profileIcon }
@@ -35,7 +45,7 @@ const Header = ({ pageTitle = 'Comidas', showSearch = true }) => {
           />
         </Button>
 
-        <h2 data-testid="page-title">
+        <h2 data-testid="page-title" style={ style }>
           { pageTitle }
         </h2>
 
