@@ -2,17 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useHistory } from 'react-router-dom';
 import {
   Container, Row, Col, Button,
-  Image, Ratio, Card, CardGroup,
-  ListGroup,
+  Image, ListGroup,
 } from 'react-bootstrap';
 // import RecipesContext from '../context/RecipesContext';
 import copy from 'clipboard-copy';
 import fetchDetailRecipe,
 { fetchRecommendedRecipes } from '../services/detailRecipeEndPointsCall';
+import shareIcon from '../images/shareIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 import './styles/DetailsRecipePage.css';
 import Loading from '../components/Loading';
 import setFavoriteRecipesToStorage from '../services/localStorageHandler';
-import DetailsIcons from '../components/DetailsIcons';
+import './styles/ProgressRecipePage.css';
 
 const DetailsRecipePage = () => {
   // tambem poderia desestruturar o match das props para pegar o recipeID --> { match: { params: { recipeId } } }
@@ -23,12 +25,21 @@ const DetailsRecipePage = () => {
   const [isFavorite, setIsFavorite] = useState(false);
   // const { mealOrDrink } = useContext(RecipesContext);
   const [recipeDetails, setRecipeDetails] = useState({}); // estado que recebe os detalhes da receita da requisição a API
-  const [recommendedRecipes, setRecommendedRecipes] = useState([]); // estado que recebe as recomendações
+  // const [recommendedRecipes, setRecommendedRecipes] = useState([]); // estado que recebe as recomendações
   const [recipeType, setRecipeType] = useState(''); // estado que armazenará o tipo de receia (comida ou bebida)
-  const [videoURL, setVideoURL] = useState(''); // estado que guarda a URL do vídeo se for uma receita de comida
+  // const [videoURL, setVideoURL] = useState(''); // estado que guarda a URL do vídeo se for uma receita de comida
   // const isMeal = (mealOrDrink === 'meal');
   const { pathname } = useLocation();
   const isMeal = pathname.includes('comidas'); // se na URL tiver 'comidas' quer dizer que é a page de comidas e retorna true
+  const [buttonDisable, setButtonDisable] = useState(true);
+  // const [inProgressRecipe, setinProgressRecipe] = useState({
+  //   cocktails: {
+  //     [recipeId]: [],
+  //   },
+  //   meals: {
+  //     [recipeId]: [],
+  //   },
+  // });
 
   useEffect(() => { // useEffect responsável principalmente por fazer a requisição da receita e guardar as informações no estado recipeDetails
     const getRecipeDetails = async () => {
@@ -39,29 +50,15 @@ const DetailsRecipePage = () => {
       setIsLoading(false);
     };
 
-    const getRecommendedRecipes = async () => { // Essa função faz a requisição e pega o array de 6 bebidas ou comidas recomendadas, se for renderizada uma pagina de comida, as recomendações serão bebidas
-      const myRecommendedRecipes = await fetchRecommendedRecipes(isMeal);
+    // const getRecommendedRecipes = async () => { // Essa função faz a requisição e pega o array de 6 bebidas ou comidas recomendadas, se for renderizada uma pagina de comida, as recomendações serão bebidas
+    //   const myRecommendedRecipes = await fetchRecommendedRecipes(isMeal);
 
-      setRecommendedRecipes(myRecommendedRecipes);
-    };
+    // setRecommendedRecipes(myRecommendedRecipes);
+    // };
 
     getRecipeDetails();
-    getRecommendedRecipes();
+    // getRecommendedRecipes();
   }, [isMeal, recipeId]);
-
-  useEffect(() => { // Esse useEffect serve para pegar o URL embedado do vídeo do youtube
-    const getValidVideoURL = () => {
-      const { strYoutube } = recipeDetails;
-      if (strYoutube !== undefined) {
-        const CORRECT_INITIAL_URL = 'https://www.youtube.com/embed/';
-        const videoID = strYoutube.split('=')[1]; // o Link vem originalmente neste formato: https://www.youtube.com/watch?v=VVnZd8A84z4. A variavel videoID retorna VVnZd8A84z4 neste caso.
-
-        setVideoURL(`${CORRECT_INITIAL_URL}${videoID}`);
-      }
-    };
-
-    getValidVideoURL();
-  }, [recipeDetails]);
 
   const getIngredientsOrMeasures = (ingredientOrMeasure) => {
     const ingredientsOrMeasures = Object.entries(recipeDetails)
@@ -80,22 +77,42 @@ const DetailsRecipePage = () => {
     copy(window.location.href);
     setLinkIsCopied(true);
 
-
-    const myTimeout = setTimeout(() => {
+    setTimeout(() => {
       setLinkIsCopied(false);
-      clearTimeout(myTimeout);
     }, THREE_SECONDS);
   };
 
   const ingredients = getIngredientsOrMeasures('strIngredient'); // strIngredient são as chaves que o objeto recipeDetails também retorna ex: (strIngredient1, strIngredient2)
   const measures = getIngredientsOrMeasures('strMeasure'); // strMeasure são as chaves que o objeto recipeDetails também retorna ex: (strMeasure1, strMeasure2)
   const { strCategory, strInstructions, strAlcoholic } = recipeDetails;
-  const recommendedType = recipeType === 'Meal' ? 'Drink' : 'Meal'; // aqui é feito o tipo de recomendação. Página é de comida? Então recomendação é de bebida.
+  // const recommendedType = recipeType === 'Meal' ? 'Drink' : 'Meal'; // aqui é feito o tipo de recomendação. Página é de comida? Então recomendação é de bebida.
 
   const handleFavoriteIconClick = () => {
     setIsFavorite(!isFavorite);
 
     setFavoriteRecipesToStorage(isFavorite, recipeDetails, recipeType, isMeal);
+  };
+
+  // const handleButtonDisabled = () => {
+  //   const ingredientsList = document.getElementsByClassName('list-group-item');
+  //   ingredientsList.map((ingredient) => console.log(ingredient));
+  // };
+
+  // Função responsável por marcar e desmarcar o checkbox;
+  const handleClickCheckBox = ({ target }) => {
+    const checkedElement = document.getElementById(`${target.value}`);
+    const classForCheckbox = 'checkbox-checked';
+    // handleButtonDisabled();
+    ingredients.forEach((item) => {
+      if (item === target.name) {
+        if (checkedElement.classList.contains(classForCheckbox)) {
+          checkedElement.classList.remove(classForCheckbox);
+          return !target.checked;
+        }
+        checkedElement.classList.add(classForCheckbox);
+        return !target.checked;
+      }
+    });
   };
 
   if (isLoading) return <Loading />;
@@ -114,15 +131,17 @@ const DetailsRecipePage = () => {
         </Col>
       </Row>
       <Row className="mt-3">
-        <Col xs={ 9 }>
+        <Col xs={ 8 }>
           <h4 data-testid="recipe-title">{recipeDetails[`str${recipeType}`]}</h4>
         </Col>
-        <Col xs={ 3 }>
-          <DetailsIcons
-            handleFavoriteIconClick={ handleFavoriteIconClick }
-            handleShareIconClick={ handleShareIconClick }
-            isFavorite={ isFavorite }
-            linkIsCopied={ linkIsCopied }
+        <Col xs={ 2 } data-testid="share-btn" onClick={ handleShareIconClick }>
+          {linkIsCopied ? <span>Link copiado!</span> : <img src={ shareIcon } alt="" /> }
+        </Col>
+        <Col xs={ 1 } onClick={ handleFavoriteIconClick }>
+          <img
+            data-testid="favorite-btn"
+            src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
+            alt=""
           />
         </Col>
       </Row>
@@ -137,11 +156,19 @@ const DetailsRecipePage = () => {
           <ListGroup>
             {ingredients.map((ingredient, index) => (
               <ListGroup.Item
-                data-testid={ `${index}-ingredient-name-and-measure` }
+                data-testid={ `${index}-ingredient-step` }
+                id={ ingredient }
                 key={ `${ingredient} - ${measures[index]}` }
                 variant="light"
               >
-                {`${ingredient} - ${measures[index] === undefined
+                <input
+                  type="checkbox"
+                  name={ ingredient }
+                  value={ ingredient }
+                  className="form-check-input"
+                  onClick={ handleClickCheckBox }
+                />
+                {` ${ingredient} - ${measures[index] === undefined
                   ? 'to taste'
                   : measures[index]}`}
               </ListGroup.Item>
@@ -155,47 +182,6 @@ const DetailsRecipePage = () => {
           <p data-testid="instructions">{ strInstructions }</p>
         </Col>
       </Row>
-      {isMeal && (
-        <Row>
-          <Col className="column-container">
-            <h5>Vídeo</h5>
-            <div style={ { width: 'auto', height: 'auto' } }>
-              <Ratio aspectRatio="16x9">
-                <iframe title="youtube-video" src={ videoURL } data-testid="video" />
-              </Ratio>
-            </div>
-          </Col>
-        </Row>
-      )}
-      <Row style={ { marginTop: '1rem' } }>
-        <Col>
-          <h5>Recommended</h5>
-        </Col>
-      </Row>
-      <Row className="recomendation-container">
-        <CardGroup className="row flex-nowrap">
-          {recommendedRecipes.map((recipe, index) => (
-            <Col
-              key={ recipe[`id${recommendedType}`] }
-              data-testid={ `${index}-recomendation-card` }
-            >
-              <Card className="card-block" style={ { width: '9.7rem' } }>
-                <Card.Img variant="top" src={ recipe[`str${recommendedType}Thumb`] } />
-                <Card.Body>
-                  <Card.Subtitle className="mb-2 text-muted">
-                    {recipe.strCategory}
-                  </Card.Subtitle>
-                  <Card.Title
-                    data-testid={ `${index}-recomendation-title` }
-                  >
-                    {recipe[`str${recommendedType}`]}
-                  </Card.Title>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </CardGroup>
-      </Row>
       <Row className="fixed-bottom">
         <Col>
           <div className="d-grid gap-2 btn-container">
@@ -203,12 +189,13 @@ const DetailsRecipePage = () => {
               style={ { width: '100%', borderRadius: '0' } }
               className="fixed-bottom"
               variant="success"
+              disabled={ buttonDisable }
               type="button"
               size="lg"
-              data-testid="start-recipe-btn"
-              onClick={ () => history.push(`${pathname}/in-progress`) }
+              data-testid="finish-recipe-btn"
+              onClick={ () => history.push('/receitas-feitas') }
             >
-              Iniciar Receita
+              Finalizar Receita
             </Button>
           </div>
         </Col>
