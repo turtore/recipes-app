@@ -3,13 +3,13 @@ import { useHistory } from 'react-router';
 import './styles/profile.css';
 
 const Profile = () => {
-  const [email, setEmail] = useState();
+  const [email, setEmail] = useState('alguem@alguem.com');
   const history = useHistory();
 
   // Pego o email que está no local storage na montagem do componente e seto ele no estado
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
-    setEmail(user.email);
+    if (user) setEmail(user.email);
   }, []);
 
   // Limpa o local storage e retorna pra tela inicial
