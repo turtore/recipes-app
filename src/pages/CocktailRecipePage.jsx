@@ -22,7 +22,7 @@ const CocktailRecipePage = () => {
   /** Faz as requisições para mostrar as categorias e as receitas */
   const requestAPI = async () => {
     const dataCockTails = await recipeAPI('name', '', 'drink');
-    const dataCategorys = await recipeAPI('listCategorys', '', 'drink');
+    const dataCategorys = await recipeAPI('listCategorys', 'c', 'drink');
     setRecipes(dataCockTails.drinks);
     setCategorys(dataCategorys.drinks);
   };

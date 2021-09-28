@@ -33,9 +33,9 @@ export default async function recipeAPI(caseInput, inputValue, mealOrDrink) {
     const responseCategorys = await requestCategorys.json();
     return responseCategorys;
   }
-  /** Pesquisa as categorias */
+  /** Pesquisa as categorias - valor do inputValue (c = category / a = area) */
   case 'listCategorys': {
-    const requestCategorys = await fetch(`${apiUrl}list.php?c=list`);
+    const requestCategorys = await fetch(`${apiUrl}list.php?${inputValue}=list`);
     const responseCategorys = await requestCategorys.json();
     return responseCategorys;
   }
