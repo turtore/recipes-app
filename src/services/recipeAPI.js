@@ -39,6 +39,12 @@ export default async function recipeAPI(caseInput, inputValue, mealOrDrink) {
     const responseCategorys = await requestCategorys.json();
     return responseCategorys;
   }
+  /** Retorna 1 receita random */
+  case 'randomRecipe': {
+    const requestRandom = await fetch(`${apiUrl}random.php`);
+    const responseRandom = await requestRandom.json();
+    return responseRandom;
+  }
   default:
     return 'parametro, invalido';
   }

@@ -7,6 +7,7 @@ import DetailsRecipePage from './pages/DetailsRecipePage';
 import MealRecipePage from './pages/MealRecipePage';
 import CocktailRecipePage from './pages/CocktailRecipePage';
 import ExplorePage from './pages/ExplorePage';
+import ExploreRecipesPage from './pages/ExploreRecipesPage';
 import ProfilePage from './pages/ProfilePage';
 import MakeRecipesPage from './pages/MakeRecipesPage';
 import FavoritesRecipesPage from './pages/FavoritesRecipesPage';
@@ -20,6 +21,8 @@ function App() {
       <Route exact path="/comidas" component={ MealRecipePage } />
       <Route exact path="/bebidas" component={ CocktailRecipePage } />
       <Route exact path="/comidas/:recipeId" component={ DetailsRecipePage } />
+      <Route exact path="/receitas-feitas" component={ MakeRecipesPage } />
+      <Route exact path="/receitas-favoritas" component={ FavoritesRecipesPage } />
       <Route
         exact
         path="/bebidas/:recipeId"
@@ -36,6 +39,7 @@ function App() {
         path="/explorar/bebidas/ingredientes"
         component={ ExploreIngredients }
       />
+      <Route exact path="/explorar/:recipe" component={ ExploreRecipesPage } />
       <Route exact path="/perfil" component={ ProfilePage } />
       <Route exact path="/receitas-feitas" component={ MakeRecipesPage } />
       <Route exact path="/receitas-favoritas" component={ FavoritesRecipesPage } />
@@ -44,8 +48,6 @@ function App() {
       <Route exact path="/comidas/:id-da-receita" component={ DetailsMealRecipesPage } />
       <Route exact path="/explorar" component={ ExplorePage } />
       <Route exact path="/perfil" component={ ProfilePage } />
-      <Route exact path="/receitas-feitas" component={ MakeRecipesPage } />
-      <Route exact path="/receitas-favoritas" component={ FavoritesRecipesPage } />
       {/* <Route exact path="/sb" component={ SearchBar } /> */}
       {/* <Route exact path="/comidas/:id-da-receita" component={ DetailsMealRecipesPage } />
       <Route
