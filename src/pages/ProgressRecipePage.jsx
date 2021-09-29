@@ -27,8 +27,6 @@ const DetailsRecipePage = () => {
   const [recipeDetails, setRecipeDetails] = useState({}); // estado que recebe os detalhes da receita da requisição a API
   // const [recommendedRecipes, setRecommendedRecipes] = useState([]); // estado que recebe as recomendações
   const [recipeType, setRecipeType] = useState(''); // estado que armazenará o tipo de receia (comida ou bebida)
-  // const [videoURL, setVideoURL] = useState(''); // estado que guarda a URL do vídeo se for uma receita de comida
-  // const isMeal = (mealOrDrink === 'meal');
   const { pathname } = useLocation();
   const isMeal = pathname.includes('comidas'); // se na URL tiver 'comidas' quer dizer que é a page de comidas e retorna true
   const [buttonDisable, setButtonDisable] = useState(true);
