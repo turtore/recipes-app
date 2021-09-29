@@ -6,8 +6,7 @@ import {
 } from 'react-bootstrap';
 // import RecipesContext from '../context/RecipesContext';
 import copy from 'clipboard-copy';
-import fetchDetailRecipe,
-{ fetchRecommendedRecipes } from '../services/detailRecipeEndPointsCall';
+import fetchDetailRecipe from '../services/detailRecipeEndPointsCall';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
@@ -23,13 +22,14 @@ const DetailsRecipePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [linkIsCopied, setLinkIsCopied] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  // const { mealOrDrink } = useContext(RecipesContext);
   const [recipeDetails, setRecipeDetails] = useState({}); // estado que recebe os detalhes da receita da requisição a API
-  // const [recommendedRecipes, setRecommendedRecipes] = useState([]); // estado que recebe as recomendações
   const [recipeType, setRecipeType] = useState(''); // estado que armazenará o tipo de receia (comida ou bebida)
   const { pathname } = useLocation();
   const isMeal = pathname.includes('comidas'); // se na URL tiver 'comidas' quer dizer que é a page de comidas e retorna true
-  const [buttonDisable, setButtonDisable] = useState(true);
+  const [buttonDisable, setButtonDisable] = useState({
+    disabled: true,
+    allChecked: 0,
+  });
   // const [inProgressRecipe, setinProgressRecipe] = useState({
   //   cocktails: {
   //     [recipeId]: [],
@@ -48,14 +48,7 @@ const DetailsRecipePage = () => {
       setIsLoading(false);
     };
 
-    // const getRecommendedRecipes = async () => { // Essa função faz a requisição e pega o array de 6 bebidas ou comidas recomendadas, se for renderizada uma pagina de comida, as recomendações serão bebidas
-    //   const myRecommendedRecipes = await fetchRecommendedRecipes(isMeal);
-
-    // setRecommendedRecipes(myRecommendedRecipes);
-    // };
-
     getRecipeDetails();
-    // getRecommendedRecipes();
   }, [isMeal, recipeId]);
 
   const getIngredientsOrMeasures = (ingredientOrMeasure) => {
@@ -83,7 +76,6 @@ const DetailsRecipePage = () => {
   const ingredients = getIngredientsOrMeasures('strIngredient'); // strIngredient são as chaves que o objeto recipeDetails também retorna ex: (strIngredient1, strIngredient2)
   const measures = getIngredientsOrMeasures('strMeasure'); // strMeasure são as chaves que o objeto recipeDetails também retorna ex: (strMeasure1, strMeasure2)
   const { strCategory, strInstructions, strAlcoholic } = recipeDetails;
-  // const recommendedType = recipeType === 'Meal' ? 'Drink' : 'Meal'; // aqui é feito o tipo de recomendação. Página é de comida? Então recomendação é de bebida.
 
   const handleFavoriteIconClick = () => {
     setIsFavorite(!isFavorite);
@@ -100,7 +92,6 @@ const DetailsRecipePage = () => {
   const handleClickCheckBox = ({ target }) => {
     const checkedElement = document.getElementById(`${target.value}`);
     const classForCheckbox = 'checkbox-checked';
-    // handleButtonDisabled();
     ingredients.forEach((item) => {
       if (item === target.name) {
         if (checkedElement.classList.contains(classForCheckbox)) {
@@ -108,10 +99,21 @@ const DetailsRecipePage = () => {
           return !target.checked;
         }
         checkedElement.classList.add(classForCheckbox);
+        setButtonDisable({
+          ...buttonDisable,
+          allChecked: allChecked += 1,
+        });
+        console.log(allChecked);
         return !target.checked;
       }
     });
   };
+
+  // useEffect(() => {
+  //   if (allChecked === ingredients.length) {
+  //     setButtonDisable(false);
+  //   }
+  // }, []);
 
   if (isLoading) return <Loading />;
 
