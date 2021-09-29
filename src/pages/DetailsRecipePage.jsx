@@ -80,7 +80,6 @@ const DetailsRecipePage = () => {
     copy(window.location.href);
     setLinkIsCopied(true);
 
-
     const myTimeout = setTimeout(() => {
       setLinkIsCopied(false);
       clearTimeout(myTimeout);
