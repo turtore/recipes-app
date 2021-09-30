@@ -44,7 +44,7 @@ const FavoriteRecipesPage = () => {
         </button>
       </div>
       <hr />
-      {favoriteRecipes != null ? favoriteRecipes
+      {favoriteRecipes[0] !== null ? favoriteRecipes
         .filter((favoriteRecipe) => favoriteRecipe.type.includes(filter))
         .map((favoriteRecipe, index) => (
           <FavoriteCard

@@ -122,6 +122,8 @@ const DetailsRecipePage = () => {
             handleShareIconClick={ handleShareIconClick }
             isFavorite={ isFavorite }
             linkIsCopied={ linkIsCopied }
+            recipeId={ recipeId }
+            setIsFavorite={ setIsFavorite }
           />
         </Col>
       </Row>

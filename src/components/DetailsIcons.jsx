@@ -8,8 +8,19 @@ import blackHeartIcon from '../images/blackHeartIcon.svg';
 const DetailsIcons = (props) => {
   const {
     handleShareIconClick, handleFavoriteIconClick,
-    isFavorite, linkIsCopied,
+    isFavorite, linkIsCopied, recipeId, setIsFavorite,
   } = props;
+
+  const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+  if (favoriteRecipes === null) {
+    localStorage.setItem('favoriteRecipes', JSON.stringify([]));
+  }
+  const START_FAVORITES = JSON.parse(localStorage.getItem('favoriteRecipes'));
+  START_FAVORITES.forEach((favorite) => {
+    if (favorite.id === recipeId) {
+      setIsFavorite(true);
+    }
+  });
 
   const target = useRef(null);
   return (
@@ -43,6 +54,8 @@ DetailsIcons.propTypes = {
   handleFavoriteIconClick: PropTypes.func.isRequired,
   isFavorite: PropTypes.bool.isRequired,
   linkIsCopied: PropTypes.bool.isRequired,
+  recipeId: PropTypes.number.isRequired,
+  setIsFavorite: PropTypes.func.isRequired,
 };
 
 export default DetailsIcons;

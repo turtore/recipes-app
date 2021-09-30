@@ -1,3 +1,8 @@
 .checkbox-checked {
   text-decoration: line-through;
 }
+
+.recipe-image {
+  max-height: 180px;
+  width: 100%;
+}
