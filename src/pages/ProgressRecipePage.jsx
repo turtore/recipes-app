@@ -9,7 +9,8 @@ import fetchDetailRecipe from '../services/detailRecipeEndPointsCall';
 import DetailsIcons from '../components/DetailsIcons';
 import './styles/DetailsRecipePage.css';
 import Loading from '../components/Loading';
-import setFavoriteRecipesToStorage from '../services/localStorageHandler';
+import setFavoriteRecipesToStorage,
+{ usedIngredients } from '../services/localStorageHandler';
 import './styles/ProgressRecipePage.css';
 
 const DetailsRecipePage = () => {
@@ -27,14 +28,6 @@ const DetailsRecipePage = () => {
     disabled: true,
     allChecked: 0,
   });
-  // const [inProgressRecipes, setinProgressRecipes] = useState({
-  //   cocktails: {
-  //     [recipeId]: [],
-  //   },
-  //   meals: {
-  //     [recipeId]: [],
-  //   },
-  // });
 
   useEffect(() => { // useEffect responsável principalmente por fazer a requisição da receita e guardar as informações no estado recipeDetails
     const getRecipeDetails = async () => {
@@ -93,8 +86,7 @@ const DetailsRecipePage = () => {
       disabled: buttonDisable.allChecked + 1 !== ingredients.length,
       allChecked: buttonDisable.allChecked + 1,
     });
-    // setIngredientsUsed(inProgressRecipes, setinProgressRecipes, recipeId, isMeal, target);
-    // console.log(target.value);
+    usedIngredients(recipeId, target.value, isMeal);
   };
 
   if (isLoading) return <Loading />;

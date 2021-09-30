@@ -31,38 +31,29 @@ const setFavoriteRecipesToStorage = (isFavorite, recipeDetails, recipeType, isMe
   }
 };
 
-// export const setIngredientsUsed = (
-//   inProgressRecipes,
-//   recipeId,
-//   isMeal,
-//   target,
-// ) => {
-//   inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
-//   if (inProgressRecipes === null) {
-//     localStorage.setItem('inProgressRecipes', JSON.stringify({}));
-//   }
+export const usedIngredients = (recipeId, ingredient, isMeal) => {
+  let inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+  if (inProgressRecipes === null) {
+    localStorage.setItem('inProgressRecipes', JSON.stringify({
+      cocktails: {},
+      meals: {},
+    }));
+  }
 
-//   const foodOrDrink = isMeal ? 'meals' : 'cocktails';
+  inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+  const recipesType = isMeal ? 'meals' : 'cocktails';
 
-//   const newProgressRecipe = {
-//     switch (foodOrDrink) {
-//       case 'meals':
-//           [recipeId]: [target.value],
-//         break;
-//       case: 'cocktails':
+  const newInprogress = {
+    ...inProgressRecipes,
+    [recipesType]: {
+      ...inProgressRecipes[recipesType],
+      [recipeId]: inProgressRecipes[recipesType][recipeId] === undefined
+        ? [ingredient]
+        : [...inProgressRecipes[recipesType][recipeId], ingredient],
+    },
+  };
 
-//         break;
-//       default:
-//         break;
-//     }
-//   };
-
-//   const newProgressRecipes = {
-//     ...inProgressRecipes,
-//     newProgressRecipe,
-//   };
-
-//   localStorage.setItem('inProgressRecipes', JSON.stringify(newProgressRecipes));
-// };
+  localStorage.setItem('inProgressRecipes', JSON.stringify(newInprogress));
+};
 
 export default setFavoriteRecipesToStorage;
