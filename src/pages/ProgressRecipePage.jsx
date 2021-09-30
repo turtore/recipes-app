@@ -4,16 +4,13 @@ import {
   Container, Row, Col, Button,
   Image, ListGroup,
 } from 'react-bootstrap';
-// import RecipesContext from '../context/RecipesContext';
 import copy from 'clipboard-copy';
-import fetchDetailRecipe,
-{ fetchRecommendedRecipes } from '../services/detailRecipeEndPointsCall';
-import shareIcon from '../images/shareIcon.svg';
-import whiteHeartIcon from '../images/whiteHeartIcon.svg';
-import blackHeartIcon from '../images/blackHeartIcon.svg';
+import fetchDetailRecipe from '../services/detailRecipeEndPointsCall';
+import DetailsIcons from '../components/DetailsIcons';
 import './styles/DetailsRecipePage.css';
 import Loading from '../components/Loading';
-import setFavoriteRecipesToStorage from '../services/localStorageHandler';
+import setFavoriteRecipesToStorage,
+{ usedIngredients } from '../services/localStorageHandler';
 import './styles/ProgressRecipePage.css';
 
 const DetailsRecipePage = () => {
@@ -23,23 +20,14 @@ const DetailsRecipePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [linkIsCopied, setLinkIsCopied] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  // const { mealOrDrink } = useContext(RecipesContext);
   const [recipeDetails, setRecipeDetails] = useState({}); // estado que recebe os detalhes da receita da requisição a API
-  // const [recommendedRecipes, setRecommendedRecipes] = useState([]); // estado que recebe as recomendações
   const [recipeType, setRecipeType] = useState(''); // estado que armazenará o tipo de receia (comida ou bebida)
-  // const [videoURL, setVideoURL] = useState(''); // estado que guarda a URL do vídeo se for uma receita de comida
-  // const isMeal = (mealOrDrink === 'meal');
   const { pathname } = useLocation();
   const isMeal = pathname.includes('comidas'); // se na URL tiver 'comidas' quer dizer que é a page de comidas e retorna true
-  const [buttonDisable, setButtonDisable] = useState(true);
-  // const [inProgressRecipe, setinProgressRecipe] = useState({
-  //   cocktails: {
-  //     [recipeId]: [],
-  //   },
-  //   meals: {
-  //     [recipeId]: [],
-  //   },
-  // });
+  const [buttonDisable, setButtonDisable] = useState({
+    disabled: true,
+    allChecked: 0,
+  });
 
   useEffect(() => { // useEffect responsável principalmente por fazer a requisição da receita e guardar as informações no estado recipeDetails
     const getRecipeDetails = async () => {
@@ -50,14 +38,7 @@ const DetailsRecipePage = () => {
       setIsLoading(false);
     };
 
-    // const getRecommendedRecipes = async () => { // Essa função faz a requisição e pega o array de 6 bebidas ou comidas recomendadas, se for renderizada uma pagina de comida, as recomendações serão bebidas
-    //   const myRecommendedRecipes = await fetchRecommendedRecipes(isMeal);
-
-    // setRecommendedRecipes(myRecommendedRecipes);
-    // };
-
     getRecipeDetails();
-    // getRecommendedRecipes();
   }, [isMeal, recipeId]);
 
   const getIngredientsOrMeasures = (ingredientOrMeasure) => {
@@ -74,7 +55,8 @@ const DetailsRecipePage = () => {
 
   const handleShareIconClick = () => {
     const THREE_SECONDS = 3000;
-    copy(window.location.href);
+    const mealOrDrink = isMeal ? 'comidas' : 'bebidas';
+    copy(`${window.location.origin}/${mealOrDrink}/${recipeId}`);
     setLinkIsCopied(true);
 
     setTimeout(() => {
@@ -85,7 +67,6 @@ const DetailsRecipePage = () => {
   const ingredients = getIngredientsOrMeasures('strIngredient'); // strIngredient são as chaves que o objeto recipeDetails também retorna ex: (strIngredient1, strIngredient2)
   const measures = getIngredientsOrMeasures('strMeasure'); // strMeasure são as chaves que o objeto recipeDetails também retorna ex: (strMeasure1, strMeasure2)
   const { strCategory, strInstructions, strAlcoholic } = recipeDetails;
-  // const recommendedType = recipeType === 'Meal' ? 'Drink' : 'Meal'; // aqui é feito o tipo de recomendação. Página é de comida? Então recomendação é de bebida.
 
   const handleFavoriteIconClick = () => {
     setIsFavorite(!isFavorite);
@@ -93,26 +74,19 @@ const DetailsRecipePage = () => {
     setFavoriteRecipesToStorage(isFavorite, recipeDetails, recipeType, isMeal);
   };
 
-  // const handleButtonDisabled = () => {
-  //   const ingredientsList = document.getElementsByClassName('list-group-item');
-  //   ingredientsList.map((ingredient) => console.log(ingredient));
-  // };
-
-  // Função responsável por marcar e desmarcar o checkbox;
-  const handleClickCheckBox = ({ target }) => {
-    const checkedElement = document.getElementById(`${target.value}`);
+  const myHandleClickCheckBox = ({ target }) => {
     const classForCheckbox = 'checkbox-checked';
-    // handleButtonDisabled();
-    ingredients.forEach((item) => {
-      if (item === target.name) {
-        if (checkedElement.classList.contains(classForCheckbox)) {
-          checkedElement.classList.remove(classForCheckbox);
-          return !target.checked;
-        }
-        checkedElement.classList.add(classForCheckbox);
-        return !target.checked;
-      }
+    if (target.parentElement.classList.contains(classForCheckbox)) {
+      target.parentElement.classList.remove(classForCheckbox);
+    } else {
+      target.parentElement.classList.add(classForCheckbox);
+    }
+    setButtonDisable({
+      ...buttonDisable,
+      disabled: buttonDisable.allChecked + 1 !== ingredients.length,
+      allChecked: buttonDisable.allChecked + 1,
     });
+    usedIngredients(recipeId, target.value, isMeal);
   };
 
   if (isLoading) return <Loading />;
@@ -134,14 +108,14 @@ const DetailsRecipePage = () => {
         <Col xs={ 8 }>
           <h4 data-testid="recipe-title">{recipeDetails[`str${recipeType}`]}</h4>
         </Col>
-        <Col xs={ 2 } data-testid="share-btn" onClick={ handleShareIconClick }>
-          {linkIsCopied ? <span>Link copiado!</span> : <img src={ shareIcon } alt="" /> }
-        </Col>
-        <Col xs={ 1 } onClick={ handleFavoriteIconClick }>
-          <img
-            data-testid="favorite-btn"
-            src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
-            alt=""
+        <Col>
+          <DetailsIcons
+            handleFavoriteIconClick={ handleFavoriteIconClick }
+            handleShareIconClick={ handleShareIconClick }
+            isFavorite={ isFavorite }
+            linkIsCopied={ linkIsCopied }
+            recipeId={ recipeId }
+            setIsFavorite={ setIsFavorite }
           />
         </Col>
       </Row>
@@ -156,21 +130,26 @@ const DetailsRecipePage = () => {
           <ListGroup>
             {ingredients.map((ingredient, index) => (
               <ListGroup.Item
-                data-testid={ `${index}-ingredient-step` }
                 id={ ingredient }
                 key={ `${ingredient} - ${measures[index]}` }
                 variant="light"
               >
-                <input
-                  type="checkbox"
-                  name={ ingredient }
-                  value={ ingredient }
-                  className="form-check-input"
-                  onClick={ handleClickCheckBox }
-                />
-                {` ${ingredient} - ${measures[index] === undefined
-                  ? 'to taste'
-                  : measures[index]}`}
+                <label
+                  htmlFor={ `${index}-ingredient-step` }
+                  data-testid={ `${index}-ingredient-step` }
+                >
+                  <input
+                    type="checkbox"
+                    id={ `${index}-ingredient-step` }
+                    name={ ingredient }
+                    value={ `${ingredient} - ${measures[index]}` }
+                    className="form-check-input"
+                    onClick={ myHandleClickCheckBox }
+                  />
+                  {` ${ingredient} - ${measures[index] === undefined
+                    ? 'to taste'
+                    : measures[index]}`}
+                </label>
               </ListGroup.Item>
             ))}
           </ListGroup>
@@ -189,7 +168,7 @@ const DetailsRecipePage = () => {
               style={ { width: '100%', borderRadius: '0' } }
               className="fixed-bottom"
               variant="success"
-              disabled={ buttonDisable }
+              disabled={ buttonDisable.disabled }
               type="button"
               size="lg"
               data-testid="finish-recipe-btn"

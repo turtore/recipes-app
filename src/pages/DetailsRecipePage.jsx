@@ -80,7 +80,6 @@ const DetailsRecipePage = () => {
     copy(window.location.href);
     setLinkIsCopied(true);
 
-
     const myTimeout = setTimeout(() => {
       setLinkIsCopied(false);
       clearTimeout(myTimeout);
@@ -123,6 +122,8 @@ const DetailsRecipePage = () => {
             handleShareIconClick={ handleShareIconClick }
             isFavorite={ isFavorite }
             linkIsCopied={ linkIsCopied }
+            recipeId={ recipeId }
+            setIsFavorite={ setIsFavorite }
           />
         </Col>
       </Row>
