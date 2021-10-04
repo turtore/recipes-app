@@ -10,7 +10,6 @@ const FavoriteRecipesPage = () => {
   const { searchOrHeader } = useContext(RecipesContext);
   const [favoriteRecipes, setFavoriteRecipes] = useState(START_FAVORITES);
   const [filter, setFilter] = useState('');
-  console.log(favoriteRecipes);
   const handleClickFilter = (filterValue) => {
     setFilter(filterValue);
   };
@@ -43,8 +42,7 @@ const FavoriteRecipesPage = () => {
           Drinks
         </button>
       </div>
-      <hr />
-      {favoriteRecipes[0] !== null ? favoriteRecipes
+      {favoriteRecipes !== null ? favoriteRecipes
         .filter((favoriteRecipe) => favoriteRecipe.type.includes(filter))
         .map((favoriteRecipe, index) => (
           <FavoriteCard
@@ -59,7 +57,7 @@ const FavoriteRecipesPage = () => {
             indexValue={ index }
             setFavoriteRecipes={ setFavoriteRecipes }
           />
-        )) : 'Nenhuma receita favorita.'}
+        )) : <h1>Nenhum receita favorita encontrada</h1>}
     </div>
   );
 };
