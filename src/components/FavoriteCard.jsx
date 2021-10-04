@@ -108,8 +108,6 @@ const FavoriteCard = ({ indexValue,
         {/* botão de remover dos favoritos */}
       </OverlayTrigger>
       <button
-        data-testid={ `${indexValue}-horizontal-favorite-btn` }
-        src={ blackHeartIcon }
         className="btn-unfavorite"
         type="button"
         onClick={ () => handleClickUnfavorite(idValue) }
