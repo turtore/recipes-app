@@ -11,7 +11,8 @@ import fetchDetailRecipe,
 { fetchRecommendedRecipes } from '../services/detailRecipeEndPointsCall';
 import './styles/DetailsRecipePage.css';
 import Loading from '../components/Loading';
-import setFavoriteRecipesToStorage from '../services/localStorageHandler';
+import setFavoriteRecipesToStorage,
+{ verifyRecipeInProgress } from '../services/localStorageHandler';
 import DetailsIcons from '../components/DetailsIcons';
 
 const DetailsRecipePage = () => {
@@ -122,6 +123,8 @@ const DetailsRecipePage = () => {
             handleShareIconClick={ handleShareIconClick }
             isFavorite={ isFavorite }
             linkIsCopied={ linkIsCopied }
+            recipeId={ recipeId }
+            setIsFavorite={ setIsFavorite }
           />
         </Col>
       </Row>
@@ -207,7 +210,9 @@ const DetailsRecipePage = () => {
               data-testid="start-recipe-btn"
               onClick={ () => history.push(`${pathname}/in-progress`) }
             >
-              Iniciar Receita
+              {verifyRecipeInProgress(recipeId, isMeal)
+                ? 'Continuar Receita'
+                : 'Iniciar Receita'}
             </Button>
           </div>
         </Col>

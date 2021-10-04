@@ -14,11 +14,18 @@ const handleClickShare = (typeValue, idValue) => {
   copy(newUrl);
 };
 
+// const deleteItem = (item, idValue) => {
+//   for (let i = 0; i < item.length; i += 1) {
+//     if (item[i].id === idValue) {
+//       delete item[i];
+//     }
+//   }
+// };
 const deleteItem = (item, idValue, aFunction) => {
   const tempLocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
   for (let i = 0; i < item.length; i += 1) {
     if (item[i].id === idValue) {
-      tempLocalStorage.splice(i);
+      tempLocalStorage.splice(i, 1);
       console.log(tempLocalStorage);
       localStorage.setItem('favoriteRecipes', JSON.stringify(tempLocalStorage));
       aFunction(tempLocalStorage);
@@ -37,13 +44,16 @@ const FavoriteCard = ({ indexValue,
   nameValue,
   setFavoriteRecipes,
 }) => {
-  // const { setFavoriteRecipes } = useContext(RecipesContext);
-
   const handleClickUnfavorite = (checkId) => {
     const tempLocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
-    deleteItem(tempLocalStorage, checkId, setFavoriteRecipes);
-    localStorage.setItem('favoriteRecipes', JSON.stringify(tempLocalStorage));
+    console.log(tempLocalStorage);
+    if (tempLocalStorage.length !== 0) {
+      deleteItem(tempLocalStorage, checkId, setFavoriteRecipes);
+      // localStorage.setItem('favoriteRecipes', JSON.stringify(tempLocalStorage));
+      // setFavoriteRecipes(tempLocalStorage);
+    }
   };
+
   return (
     <div className="container-cards">
       <div className="img-card">
@@ -72,7 +82,7 @@ const FavoriteCard = ({ indexValue,
         </span>
       </div>
 
-      { /** Components bootstrap para mostrar mensagem de Link copiado! */ }
+      { /** Componente bootstrap para mostrar mensagem de Link copiado! */ }
       <OverlayTrigger
         trigger="click"
         overlay={
@@ -98,8 +108,6 @@ const FavoriteCard = ({ indexValue,
         {/* botão de remover dos favoritos */}
       </OverlayTrigger>
       <button
-        data-testid={ `${indexValue}-horizontal-favorite-btn` }
-        src={ blackHeartIcon }
         className="btn-unfavorite"
         type="button"
         onClick={ () => handleClickUnfavorite(idValue) }

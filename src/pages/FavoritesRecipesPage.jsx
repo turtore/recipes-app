@@ -42,7 +42,6 @@ const FavoriteRecipesPage = () => {
           Drinks
         </button>
       </div>
-      <hr />
       {favoriteRecipes !== null ? favoriteRecipes
         .filter((favoriteRecipe) => favoriteRecipe.type.includes(filter))
         .map((favoriteRecipe, index) => (
@@ -58,7 +57,7 @@ const FavoriteRecipesPage = () => {
             indexValue={ index }
             setFavoriteRecipes={ setFavoriteRecipes }
           />
-        )) : <h1>'Nenhuma receita favorita.'</h1>}
+        )) : <h1>Nenhum receita favorita encontrada</h1>}
     </div>
   );
 };
