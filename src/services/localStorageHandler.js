@@ -56,4 +56,22 @@ export const usedIngredients = (recipeId, ingredient, isMeal) => {
   localStorage.setItem('inProgressRecipes', JSON.stringify(newInprogress));
 };
 
+export const verifyRecipeInProgress = (recipeId, isMeal) => {
+  let inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+  if (inProgressRecipes === null) {
+    localStorage.setItem('inProgressRecipes', JSON.stringify({
+      cocktails: {},
+      meals: {},
+    }));
+  }
+
+  inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+
+  const recipeType = isMeal ? 'meals' : 'cocktails';
+  const thisRecipe = inProgressRecipes[recipeType][recipeId];
+  const isRecipeInProgress = thisRecipe !== undefined;
+
+  return isRecipeInProgress;
+};
+
 export default setFavoriteRecipesToStorage;
