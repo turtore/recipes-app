@@ -82,7 +82,7 @@ const FavoriteCard = ({ indexValue,
         </span>
       </div>
 
-      { /** Components bootstrap para mostrar mensagem de Link copiado! */ }
+      { /** Componente bootstrap para mostrar mensagem de Link copiado! */ }
       <OverlayTrigger
         trigger="click"
         overlay={
@@ -108,8 +108,6 @@ const FavoriteCard = ({ indexValue,
         {/* botão de remover dos favoritos */}
       </OverlayTrigger>
       <button
-        data-testid={ `${indexValue}-horizontal-favorite-btn` }
-        src={ blackHeartIcon }
         className="btn-unfavorite"
         type="button"
         onClick={ () => handleClickUnfavorite(idValue) }
