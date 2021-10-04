@@ -15,7 +15,7 @@ const ExploreMeal = () => {
 
   return (
     <div>
-      <Header pageTitle="Explorar comidas" showSearch={ false } />
+      <Header pageTitle="Explorar Comidas" showSearch={ false } />
       <Stack gap={ 2 } className="col-md-5 mx-auto mt-4">
         <Button
           variant="secondary"

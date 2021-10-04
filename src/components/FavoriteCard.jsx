@@ -25,7 +25,7 @@ const deleteItem = (item, idValue, aFunction) => {
   const tempLocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
   for (let i = 0; i < item.length; i += 1) {
     if (item[i].id === idValue) {
-      tempLocalStorage.splice(i);
+      tempLocalStorage.splice(i, 1);
       console.log(tempLocalStorage);
       localStorage.setItem('favoriteRecipes', JSON.stringify(tempLocalStorage));
       aFunction(tempLocalStorage);
