@@ -10,16 +10,9 @@ import DetailsIcons from '../components/DetailsIcons';
 import './styles/DetailsRecipePage.css';
 import Loading from '../components/Loading';
 import setFavoriteRecipesToStorage,
-{ usedIngredients } from '../services/localStorageHandler';
+{ getListInProgress, usedIngredients } from '../services/localStorageHandler';
 import './styles/ProgressRecipePage.css';
 
-let inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
-if (inProgressRecipes === null) {
-  localStorage.setItem('inProgressRecipes', JSON.stringify({
-    cocktails: {},
-    meals: {},
-  }));
-}
 const DetailsRecipePage = () => {
   // tambem poderia desestruturar o match das props para pegar o recipeID --> { match: { params: { recipeId } } }
   const history = useHistory();
@@ -35,6 +28,7 @@ const DetailsRecipePage = () => {
     disabled: true,
     allChecked: 0,
   });
+  const recipesInStorage = getListInProgress(recipeId, isMeal);
 
   useEffect(() => { // useEffect responsável principalmente por fazer a requisição da receita e guardar as informações no estado recipeDetails
     const getRecipeDetails = async () => {
@@ -95,11 +89,6 @@ const DetailsRecipePage = () => {
     });
     usedIngredients(recipeId, target, isMeal);
   };
-
-  const recipesInStorage = JSON
-    .parse(localStorage
-      .getItem('inProgressRecipes'))[isMeal ? 'meals' : 'cocktails'][recipeId];
-  console.log(recipesInStorage);
 
   if (isLoading) return <Loading />;
 
