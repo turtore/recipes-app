@@ -105,6 +105,7 @@ const DetailsRecipePage = () => {
     // handleButtonDisabled();
     ingredients.forEach((item) => {
       if (item === target.name) {
+        console.log(checkedElement);
         if (checkedElement.classList.contains(classForCheckbox)) {
           checkedElement.classList.remove(classForCheckbox);
           return !target.checked;

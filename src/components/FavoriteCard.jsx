@@ -14,13 +14,15 @@ const handleClickShare = (typeValue, idValue) => {
   copy(newUrl);
 };
 
-const deleteItem = (item, idValue) => {
+const deleteItem = (item, idValue, aFunction) => {
+  const tempLocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
   for (let i = 0; i < item.length; i += 1) {
     if (item[i].id === idValue) {
-      console.log('sou igual');
-      delete item[i];
+      tempLocalStorage.splice(i);
+      console.log(tempLocalStorage);
+      localStorage.setItem('favoriteRecipes', JSON.stringify(tempLocalStorage));
+      aFunction(tempLocalStorage);
     }
-    // console.log(item);
   }
 };
 
@@ -39,9 +41,8 @@ const FavoriteCard = ({ indexValue,
 
   const handleClickUnfavorite = (checkId) => {
     const tempLocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
-    deleteItem(tempLocalStorage, checkId);
+    deleteItem(tempLocalStorage, checkId, setFavoriteRecipes);
     localStorage.setItem('favoriteRecipes', JSON.stringify(tempLocalStorage));
-    setFavoriteRecipes(tempLocalStorage);
   };
   return (
     <div className="container-cards">
