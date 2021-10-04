@@ -13,6 +13,13 @@ import setFavoriteRecipesToStorage,
 { usedIngredients } from '../services/localStorageHandler';
 import './styles/ProgressRecipePage.css';
 
+let inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+if (inProgressRecipes === null) {
+  localStorage.setItem('inProgressRecipes', JSON.stringify({
+    cocktails: {},
+    meals: {},
+  }));
+}
 const DetailsRecipePage = () => {
   // tambem poderia desestruturar o match das props para pegar o recipeID --> { match: { params: { recipeId } } }
   const history = useHistory();
@@ -86,8 +93,13 @@ const DetailsRecipePage = () => {
       disabled: buttonDisable.allChecked + 1 !== ingredients.length,
       allChecked: buttonDisable.allChecked + 1,
     });
-    usedIngredients(recipeId, target.value, isMeal);
+    usedIngredients(recipeId, target, isMeal);
   };
+
+  const recipesInStorage = JSON
+    .parse(localStorage
+      .getItem('inProgressRecipes'))[isMeal ? 'meals' : 'cocktails'][recipeId];
+  console.log(recipesInStorage);
 
   if (isLoading) return <Loading />;
 
@@ -137,6 +149,10 @@ const DetailsRecipePage = () => {
                 <label
                   htmlFor={ `${index}-ingredient-step` }
                   data-testid={ `${index}-ingredient-step` }
+                  className={ recipesInStorage
+                    .some((item) => item === `${ingredient} - ${measures[index]}`)
+                    ? 'checkbox-checked'
+                    : '' }
                 >
                   <input
                     type="checkbox"
@@ -145,6 +161,8 @@ const DetailsRecipePage = () => {
                     value={ `${ingredient} - ${measures[index]}` }
                     className="form-check-input"
                     onClick={ myHandleClickCheckBox }
+                    checked={ recipesInStorage
+                      .some((item) => item === `${ingredient} - ${measures[index]}`) }
                   />
                   {` ${ingredient} - ${measures[index] === undefined
                     ? 'to taste'
