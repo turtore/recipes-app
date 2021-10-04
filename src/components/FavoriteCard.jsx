@@ -82,7 +82,7 @@ const FavoriteCard = ({ indexValue,
         </span>
       </div>
 
-      { /** Components bootstrap para mostrar mensagem de Link copiado! */ }
+      { /** Componente bootstrap para mostrar mensagem de Link copiado! */ }
       <OverlayTrigger
         trigger="click"
         overlay={
