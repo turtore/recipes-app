@@ -5,6 +5,7 @@ import RecipesCards from '../components/RecipesCards';
 import SearchBar from '../components/Searchbar';
 import RecipesContext from '../context/RecipesContext';
 import recipeAPI from '../services/recipeAPI';
+import Footer from '../components/Footer';
 
 const ExploreRecipesAreaPage = () => {
   const {
@@ -82,6 +83,7 @@ const ExploreRecipesAreaPage = () => {
             ))
         }
       </div>
+      <Footer />
     </div>
   );
 };
