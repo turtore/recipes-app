@@ -10,7 +10,7 @@ import DetailsIcons from '../components/DetailsIcons';
 import './styles/DetailsRecipePage.css';
 import Loading from '../components/Loading';
 import setFavoriteRecipesToStorage,
-{ usedIngredients } from '../services/localStorageHandler';
+{ getListInProgress, usedIngredients } from '../services/localStorageHandler';
 import './styles/ProgressRecipePage.css';
 
 const DetailsRecipePage = () => {
@@ -24,10 +24,8 @@ const DetailsRecipePage = () => {
   const [recipeType, setRecipeType] = useState(''); // estado que armazenará o tipo de receia (comida ou bebida)
   const { pathname } = useLocation();
   const isMeal = pathname.includes('comidas'); // se na URL tiver 'comidas' quer dizer que é a page de comidas e retorna true
-  const [buttonDisable, setButtonDisable] = useState({
-    disabled: true,
-    allChecked: 0,
-  });
+  const recipesInStorage = getListInProgress(recipeId, isMeal);
+  const [buttonDisable, setButtonDisable] = useState({});
 
   useEffect(() => { // useEffect responsável principalmente por fazer a requisição da receita e guardar as informações no estado recipeDetails
     const getRecipeDetails = async () => {
@@ -83,10 +81,8 @@ const DetailsRecipePage = () => {
     }
     setButtonDisable({
       ...buttonDisable,
-      disabled: buttonDisable.allChecked + 1 !== ingredients.length,
-      allChecked: buttonDisable.allChecked + 1,
     });
-    usedIngredients(recipeId, target.value, isMeal);
+    usedIngredients(recipeId, target, isMeal);
   };
 
   if (isLoading) return <Loading />;
@@ -137,6 +133,10 @@ const DetailsRecipePage = () => {
                 <label
                   htmlFor={ `${index}-ingredient-step` }
                   data-testid={ `${index}-ingredient-step` }
+                  className={ recipesInStorage
+                    .some((item) => item === `${ingredient} - ${measures[index]}`)
+                    ? 'checkbox-checked'
+                    : '' }
                 >
                   <input
                     type="checkbox"
@@ -145,6 +145,8 @@ const DetailsRecipePage = () => {
                     value={ `${ingredient} - ${measures[index]}` }
                     className="form-check-input"
                     onClick={ myHandleClickCheckBox }
+                    defaultChecked={ recipesInStorage
+                      .some((item) => item === `${ingredient} - ${measures[index]}`) }
                   />
                   {` ${ingredient} - ${measures[index] === undefined
                     ? 'to taste'
@@ -168,7 +170,7 @@ const DetailsRecipePage = () => {
               style={ { width: '100%', borderRadius: '0' } }
               className="fixed-bottom"
               variant="success"
-              disabled={ buttonDisable.disabled }
+              disabled={ recipesInStorage.length !== ingredients.length }
               type="button"
               size="lg"
               data-testid="finish-recipe-btn"

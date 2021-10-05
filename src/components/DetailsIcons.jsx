@@ -54,7 +54,7 @@ DetailsIcons.propTypes = {
   handleFavoriteIconClick: PropTypes.func.isRequired,
   isFavorite: PropTypes.bool.isRequired,
   linkIsCopied: PropTypes.bool.isRequired,
-  recipeId: PropTypes.number.isRequired,
+  recipeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   setIsFavorite: PropTypes.func.isRequired,
 };
 
