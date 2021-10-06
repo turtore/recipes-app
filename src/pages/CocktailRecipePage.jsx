@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import SearchBar from '../components/Searchbar';
@@ -20,6 +20,7 @@ const CocktailRecipePage = () => {
   } = useContext(RecipesContext);
   const sizeListRecipes = 12;
   const sizeListCategorys = 5;
+  const [categoriesButtonToggler, setCategoriesButtonToggler] = useState([]);
 
   /** Faz as requisições para mostrar as categorias e as receitas */
   const requestAPI = async () => {
@@ -32,12 +33,34 @@ const CocktailRecipePage = () => {
     }
     const dataCategorys = await recipeAPI('listCategorys', '', 'drink');
     setCategorys(dataCategorys.drinks);
+    setCategoriesButtonToggler(dataCategorys.drinks.map((category) => (
+      {
+        category: category.strCategory,
+        active: true,
+      }
+    )));
   };
 
   /** Função que envia a categoria pro provider */
   const handleFilterCategory = async (strCategory) => {
-    const dataFilterCockTails = await recipeAPI('category', strCategory, 'drink');
-    setRecipes(dataFilterCockTails.drinks);
+    const toggle = categoriesButtonToggler
+      .find(({ category }) => category === strCategory);
+    if (toggle.active) {
+      const dataFilterCockTails = await recipeAPI('category', strCategory, 'drink');
+      setRecipes(dataFilterCockTails.drinks);
+      setCategoriesButtonToggler([
+        ...[...categoriesButtonToggler].filter(({ category }) => category !== strCategory)
+          .map(({ category }) => ({ category, active: true })),
+        { category: strCategory, active: false },
+      ]);
+    } else {
+      await requestAPI();
+      setCategoriesButtonToggler([
+        ...[...categoriesButtonToggler].filter(({ category }) => category !== strCategory)
+          .map(({ category }) => ({ category, active: true })),
+        { category: strCategory, active: true },
+      ]);
+    }
   };
 
   /** Função que mostra todas as receitas */
