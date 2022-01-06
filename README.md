@@ -26,3 +26,5 @@ If you're having any trouble on running the project or have a suggestion feel fr
 4. To run the project use the command **npm start** and open in a browser (recommends chrome) url adress `http://localhost:3000/frontend-store`.
 
 ---
+## Exploring the Application
+You can use any login and password to start exploring the functions on the App.
